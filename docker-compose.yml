@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    container_name: lp-trace
+    ports:
+      - "5011:5011"
+    environment:
+      - FLASK_ENV=production
+      - DATA_DIR=/app/data
+      # convite do grupo de WhatsApp da live (todos os botoes levam para ele)
+      - URL_GRUPO_WHATSAPP=https://chat.whatsapp.com/GlutBD2HTw7ANQ70eN8Cr4
+    volumes:
+      # leads sobrevivem a rebuild da imagem
+      - ./data:/app/data
+    restart: unless-stopped

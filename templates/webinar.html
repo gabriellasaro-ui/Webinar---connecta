@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WD6R2JDK');</script>
+<!-- End Google Tag Manager -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- ===================== SEO ===================== -->
+<title>Imobiliária Previsível · Live gratuita para donos de imobiliárias</title>
+<meta name="description" content="Live gratuita em 14 de outubro: processos e indicadores que ajudam sua imobiliária a vender mesmo em um cenário de incerteza. 100% ao vivo, com Pedro Lucas.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Pedro Lucas">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="{{ request.base_url }}">
+
+<!-- ===================== Open Graph ===================== -->
+<meta property="og:site_name" content="Imobiliária Previsível">
+<meta property="og:title" content="Imobiliária Previsível · Live gratuita em 14 de outubro">
+<meta property="og:description" content="Enquanto algumas imobiliárias esperam o cenário mudar, outras preparam as próximas vendas. Inscrição gratuita.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="{{ request.base_url }}">
+<meta property="og:image" content="{{ url_for('static', filename='image/og.jpg', _external=True) }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Imobiliária Previsível · Live gratuita em 14 de outubro">
+<meta name="twitter:description" content="Processos e indicadores para sua imobiliária vender mesmo em um cenário de incerteza.">
+<meta name="twitter:image" content="{{ url_for('static', filename='image/og.jpg', _external=True) }}">
+
+<!-- ===================== Assets ===================== -->
+<link rel="icon" href="{{ url_for('static', filename='image/favicon.png') }}" type="image/png">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='image/apple-touch-icon.png') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="font" type="font/otf" crossorigin href="{{ url_for('static', filename='fonts/Drupadi-Regular.otf') }}">
+<link rel="preload" as="image" href="{{ url_for('static', filename='image/banner-pc.webp') }}" media="(min-width: 861px)">
+<link rel="preload" as="image" href="{{ url_for('static', filename='image/banner-mobile.webp') }}" media="(max-width: 860px)">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/lp.css') }}">
+
+<!-- ===================== Tracking base obrigatorio ===================== -->
+<script src="{{ url_for('static', filename='tracking.js') }}" defer></script>
+
+<style>
+/* ==========================================================================
+   Estilos especificos desta LP. O sistema compartilhado vive em lp.css.
+   ========================================================================== */
+
+/* display de componente (grid, inline-flex) nao pode vencer o [hidden] */
+[hidden] { display: none !important; }
+@media (max-width: 860px) { .hide-sm { display: none; } }
+
+/* ---------------------------------------------------------- HEADER ------ */
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 200;
+  padding: 18px var(--pad-x);
+  transition: padding .4s var(--ease), background .4s var(--ease);
+}
+.header.is-stuck {
+  padding-block: 11px;
+  background: linear-gradient(180deg, rgba(0,0,0,.96) 0%, rgba(0,0,0,.86) 45%, rgba(0,0,0,.55) 74%, rgba(0,0,0,0) 100%);
+}
+.header__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(2,4,10,.86);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .38s var(--ease), visibility .38s;
+}
+.header.is-open .header__scrim { opacity: 1; visibility: visible; }
+body.nav-aberta { overflow: hidden; }
+
+.header__bar {
+  max-width: 1540px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+}
+
+.brand { display: inline-flex; align-items: center; gap: 14px; }
+.logo {
+  width: clamp(40px, 3.4vw, 50px);
+  height: auto;
+  transition: opacity var(--t-fast) var(--ease);
+}
+.brand:hover .logo { opacity: .78; }
+.brand__name {
+  font-family: 'Drupadi', sans-serif;
+  font-size: .78rem;
+  line-height: 1.15;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #fff;
+  padding-left: 14px;
+  border-left: 1px solid rgba(255,255,255,.22);
+}
+
+/* pilula de navegacao de vidro, igual ao direcionamento visual */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: var(--r-pill);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.20);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: 0 14px 40px -16px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.nav a {
+  position: relative;
+  padding: 10px 22px;
+  border-radius: var(--r-pill);
+  font-size: .92rem;
+  color: rgba(255,255,255,.74);
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.nav a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(150deg, rgba(255,255,255,.20), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.22);
+  opacity: 0;
+  transform: scale(.86);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.nav a > span { position: relative; }
+.nav a:hover { color: #fff; }
+.nav a.is-active { color: #fff; }
+.nav a.is-active::before { opacity: 1; transform: scale(1); }
+.nav__cta { display: none; }
+
+/* CTA compacto do cabecalho */
+.btn--sm { padding: 6px 6px 6px 22px; font-size: .9rem; gap: 12px; }
+.btn--sm .btn__ico { width: 34px; height: 34px; }
+.btn--sm .btn__ico svg { width: 14px; height: 14px; }
+
+.burger {
+  display: none;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: rgba(14,18,30,.72);
+  border: 1px solid rgba(255,255,255,.22);
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.burger i {
+  display: block;
+  width: 18px; height: 1.5px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform .35s var(--ease), opacity .25s var(--ease);
+}
+.burger i + i { margin-top: 5px; }
+.header.is-open .burger i:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.header.is-open .burger i:nth-child(2) { opacity: 0; }
+.header.is-open .burger i:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.header__end { display: flex; align-items: center; gap: 12px; }
+
+@media (max-width: 1080px) {
+  .burger { display: flex; }
+  .nav {
+    position: fixed;
+    inset: 84px 16px auto 16px;
+    background: linear-gradient(170deg, rgba(20,26,42,.96), rgba(4,6,14,.98));
+    border-color: rgba(255,255,255,.16);
+    box-shadow: 0 34px 80px -20px rgba(0,0,0,1);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 14px;
+    border-radius: var(--r-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-14px) scale(.98);
+    transition: opacity .35s var(--ease), transform .35s var(--ease), visibility .35s;
+  }
+  .header.is-open .nav { opacity: 1; visibility: visible; transform: none; }
+  .nav a { padding: 15px 20px; font-size: 1.02rem; }
+  .nav .nav__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+    color: #fff;
+    background: linear-gradient(120deg, var(--blue-hi), var(--blue) 58%, var(--blue-lo));
+    box-shadow: var(--shadow-blue);
+  }
+  .nav .nav__cta::before { display: none; }
+}
+@media (max-width: 560px) {
+  .header__end .btn { display: none; }
+  .brand__name { display: none; }
+}
+
+/* ------------------------------------------------------------ HERO ------ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: 140px 96px;
+  isolation: isolate;
+  overflow: hidden;
+}
+.hero__media { position: absolute; inset: 0; z-index: -3; }
+.hero__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 72% 30%;
+}
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(90deg, #000 4%, rgba(0,0,0,.84) 34%, rgba(0,0,0,.18) 60%, rgba(0,0,0,.30) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.72) 0%, transparent 26%, transparent 52%, #000 96%);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 26%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.45) 44%, rgba(0,0,0,.88) 78%, #000 100%);
+}
+.hero__inner {
+  position: relative;
+  width: 100%;
+  max-width: 1540px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 3.2vw, 50px);
+}
+.hero__copy { max-width: 760px; }
+.hero .eyebrow { margin-bottom: 26px; }
+/* Headline longa quebrada em cinco linhas curtas: o bloco fica estreito no
+   lado escuro do banner, longe do rosto. */
+.hero h1 {
+  font-size: clamp(1.55rem, 2.85vw, 2.9rem);
+  line-height: 1.1;
+  margin-bottom: 26px;
+}
+.hero h1 em {
+  font-style: normal;
+  background-image: linear-gradient(100deg, #8cc0ff 0%, var(--blue-soft) 45%, var(--blue-hi) 100%);
+}
+.hero .lead { max-width: 48ch; margin-bottom: 36px; }
+.hero .lead strong { color: #fff; font-weight: 500; }
+
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-top: 30px;
+  font-size: .8rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.66);
+}
+.hero__meta li { display: inline-flex; align-items: center; gap: 9px; }
+.hero__meta svg { width: 15px; height: 15px; color: var(--blue-soft); flex: none; }
+
+/* ponto "ao vivo" pulsando */
+.live-dot {
+  position: relative;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 10px 2px rgba(87,230,196,.8);
+  flex: none;
+}
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(87,230,196,.7);
+  animation: livePulse 1.8s var(--ease-out) infinite;
+}
+@keyframes livePulse {
+  from { transform: scale(.4); opacity: 1; }
+  to   { transform: scale(1.6); opacity: 0; }
+}
+.eyebrow--live::before { display: none; }
+.eyebrow--live { color: #cfe2ff; }
+
+/* chips flutuantes sobre a foto, contornando o rosto */
+.hero__chips {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.hero__chips .chip { position: absolute; pointer-events: auto; }
+.hero__chips .chip svg { width: 16px; height: 16px; color: var(--blue-soft); }
+/* Flutuar continuo, em ease-in-out. Com a curva --ease o selo fazia o
+   percurso no primeiro segundo e parecia parado no resto do ciclo. Duracoes
+   e atrasos diferentes para os tres nunca subirem juntos. */
+.hero__chips .chip:nth-child(1) { left: 52%; top: 56%; animation: float 5.2s ease-in-out infinite; font-size: 1rem; padding: 13px 24px; }
+.hero__chips .chip:nth-child(2) { right: 4%; top: 71%; animation: float 6.4s ease-in-out -2.1s infinite; }
+.hero__chips .chip:nth-child(3) { left: 55%; top: 72%; animation: float 5.8s ease-in-out -3.6s infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -18px, 0); }
+}
+
+
+@media (max-width: 1180px) {
+  .hero__chips .chip { font-size: .78rem; padding: 9px 15px; }
+  .hero__chips .chip:nth-child(1) { font-size: .86rem; padding: 10px 18px; }
+}
+
+@media (max-width: 860px) {
+  .hero {
+    align-items: flex-end;
+    padding-block: 120px 64px;
+  }
+  .hero__media img { object-position: center top; }
+  .hero__scrim {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.70) 0%, rgba(0,0,0,.04) 14%, rgba(0,0,0,.30) 30%, rgba(0,0,0,.86) 46%, #000 60%);
+  }
+  .hero__copy { max-width: none; }
+  .hero .eyebrow { margin-bottom: 16px; font-size: .64rem; letter-spacing: .2em; }
+  .hero h1 { margin-bottom: 18px; font-size: clamp(1.4rem, 6.4vw, 2rem); }
+  .hero .lead { max-width: none; margin-bottom: 24px; font-size: .98rem; line-height: 1.62; }
+
+  /* As quebras manuais sao do desktop. No celular a frase corre solta e o
+     titulo entra inteiro, senao sobravam linhas de uma palavra so. */
+  .hero h1 br { display: none; }
+  .hero h1.reveal-lines span,
+  .hero h1.reveal-lines span > i { display: inline; overflow: visible; transform: none; padding: 0; }
+  .hero h1.reveal-lines {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition: opacity 1s var(--ease-out), transform 1.1s var(--ease-out);
+  }
+  .hero h1.reveal-lines.is-in { opacity: 1; transform: none; }
+  .hero__actions .btn { width: 100%; justify-content: space-between; }
+  .hero__meta { margin-top: 22px; gap: 8px 16px; font-size: .72rem; }
+  .hero__chips { display: none; }
+}
+
+/* ------------------------------------------------ TITULOS LONGOS -------- */
+/* A copy desta LP tem titulos de frase inteira. Drupadi e larga, entao o
+   h2 aqui fica um degrau abaixo do sistema. */
+.section h2 { font-size: clamp(1.45rem, 2.55vw, 2.5rem); line-height: 1.1; }
+.sec-head { max-width: 980px; }
+
+/* --------------------------------------------------- 02. CENARIO -------- */
+.lead + .lead { margin-top: 14px; }
+
+
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(10px, 1vw, 15px);
+}
+.pain-grid > * { grid-column: span 2; }
+.pain-grid > *:nth-child(4),
+.pain-grid > *:nth-child(5) { grid-column: span 3; }
+
+/* card de dor so com titulo: numero em cima, frase curta embaixo */
+.pain-card { display: grid; gap: 18px; align-content: start; }
+.pain-card h3 { font-size: clamp(1.02rem, 1.35vw, 1.24rem); line-height: 1.22; }
+@media (max-width: 620px) { .pain-card { gap: 12px; } }
+
+@media (max-width: 980px) {
+  .pain-grid { grid-template-columns: repeat(2, 1fr); }
+  .pain-grid > *:nth-child(n) { grid-column: span 1; }
+  .pain-grid > *:nth-child(5) { grid-column: span 2; }
+}
+@media (max-width: 620px) {
+  .pain-grid { grid-template-columns: 1fr; }
+  .pain-grid > *:nth-child(n) { grid-column: span 1; }
+}
+
+.statement {
+  margin-top: clamp(28px, 3.4vw, 48px);
+  padding: clamp(28px, 3.4vw, 46px) clamp(26px, 3.6vw, 54px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px 40px;
+  border-radius: var(--r-xl);
+}
+.statement h3 { font-size: clamp(1.15rem, 2vw, 1.8rem); line-height: 1.2; max-width: 34ch; }
+.statement .btn { flex: none; }
+
+/* ------------------------------------------------- 03. CONTEUDO --------- */
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 1vw, 15px);
+}
+@media (max-width: 980px) { .topic-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .topic-grid { grid-template-columns: 1fr; } }
+
+.topic { display: flex; flex-direction: column; }
+.topic__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.topic__top .card__num { font-size: clamp(1.3rem, 1.7vw, 1.7rem); }
+.topic h3 { margin-top: 18px; font-size: clamp(1.02rem, 1.35vw, 1.24rem); line-height: 1.22; }
+
+/* frase de fechamento no card; o CTA fica fora dele, logo abaixo */
+.content-close {
+  margin-top: clamp(26px, 3vw, 44px);
+  padding: clamp(26px, 3.2vw, 44px) clamp(26px, 3.6vw, 54px);
+  border-radius: var(--r-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px 44px;
+}
+.content-close p {
+  flex: 1 1 420px;
+  font-size: clamp(1.02rem, 1.45vw, 1.3rem);
+  line-height: 1.55;
+  font-weight: 500;
+  color: #fff;
+}
+.content-close p b { font-weight: 500; color: #cfe2ff; }
+/* Desktop: CTA dentro do card, a direita da frase. Celular: frase
+   centralizada no card e o CTA sai para baixo dele, na largura toda.
+   Sao dois links; so um aparece por vez. */
+.content-cta { display: none; }
+@media (max-width: 860px) {
+  .content-close { display: block; text-align: center; }
+  .content-close p { max-width: 46ch; margin-inline: auto; }
+  .content-close .btn { display: none; }
+  .content-cta { display: flex; margin-top: 22px; }
+}
+
+/* --------------------------------------------------- 04. PEDRO ---------- */
+.host-grid {
+  display: grid;
+  grid-template-columns: .82fr 1.18fr;
+  gap: clamp(32px, 5vw, 80px);
+  align-items: stretch;
+}
+.host-grid > * { min-width: 0; }
+@media (max-width: 900px) { .host-grid { grid-template-columns: 1fr; } }
+
+/* No desktop a foto estica ate a altura da copy ao lado */
+.host-photo {
+  position: relative;
+  height: 100%;
+  min-height: 420px;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  box-shadow: 0 40px 90px -30px rgba(11,98,255,.55), var(--shadow-glass);
+  background: #02040a;
+}
+.host-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 58% 22%;
+}
+.host-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.92) 100%);
+  pointer-events: none;
+}
+.host-photo__tag {
+  position: absolute;
+  left: 20px; right: 20px; bottom: 20px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.host-photo__tag strong {
+  font-family: 'Drupadi', sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #fff;
+}
+@media (max-width: 900px) {
+  .host-photo { max-width: 460px; height: auto; min-height: 0; aspect-ratio: 4 / 5; }
+}
+
+.host-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 24px;
+}
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: var(--r-sm);
+}
+.stat__num {
+  flex: none;
+  font-family: 'Drupadi', sans-serif;
+  font-size: clamp(1.4rem, 1.9vw, 1.8rem);
+  line-height: 1;
+}
+.card.stat p { font-size: .8rem; line-height: 1.4; }
+@media (max-width: 520px) { .host-stats { grid-template-columns: 1fr; } }
+
+
+/* ---------------------------------------------- 05. DEPOIMENTOS -------- */
+/* Luz azul no canto inferior esquerdo, so no desktop. Fica acima da emenda
+   escura da secao (senao sumia nela) e apaga antes da borda de baixo, para
+   nao riscar a passagem para a proxima secao. */
+.fx-spot--corner { z-index: -1; }
+.fx-spot--corner::before {
+  background: radial-gradient(34% 32% at 3% 70%, rgba(11,98,255,.62), rgba(11,98,255,.20) 48%, transparent 72%);
+}
+
+/* Prints de WhatsApp com alturas diferentes, mas todos no mesmo quadro:
+   o recorte mostra a parte que importa (--pos) e o clique amplia inteiro. */
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 24px);
+  align-items: start;
+}
+.proof { display: grid; gap: 14px; }
+.proof__shot {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--stroke);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  aspect-ratio: 5 / 6;
+  cursor: zoom-in;
+  background: #0b141a;
+  box-shadow: 0 30px 70px -28px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.03), inset 0 1px 0 rgba(255,255,255,.13);
+  transition: transform var(--t-mid) var(--ease), border-color var(--t-fast) var(--ease), box-shadow var(--t-mid) var(--ease);
+}
+.proof__shot img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center); }
+/* brilho de vidro por cima do print */
+.proof__shot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,.10), transparent 30%);
+  pointer-events: none;
+}
+.proof__zoom {
+  position: absolute;
+  right: 12px; top: 12px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(8,12,22,.66);
+  border: 1px solid rgba(255,255,255,.26);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: scale(.8);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.proof__zoom svg { width: 17px; height: 17px; }
+.proof__shot:hover {
+  transform: translateY(-6px);
+  border-color: rgba(77,155,255,.5);
+  box-shadow: 0 40px 80px -26px rgba(11,98,255,.5), 0 0 0 1px rgba(77,155,255,.14), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.proof__shot:hover .proof__zoom { opacity: 1; transform: none; background: var(--blue); }
+
+.proof__cap { display: grid; gap: 3px; padding-inline: 4px; }
+.proof__num {
+  font-family: 'Drupadi', sans-serif;
+  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.proof__txt { font-size: .84rem; line-height: 1.45; color: var(--muted); }
+
+@media (hover: none) { .proof__zoom { opacity: 1; transform: none; } }
+
+@media (max-width: 980px) {
+  .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  /* no celular vira carrossel com encaixe */
+  .proof-grid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 78%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 12px;
+    margin-inline: calc(var(--pad-x) * -1);
+    padding-inline: var(--pad-x);
+    scroll-padding-inline: var(--pad-x);
+    scrollbar-width: none;
+  }
+  .proof-grid::-webkit-scrollbar { display: none; }
+  .proof { scroll-snap-align: start; }
+}
+
+/* ampliacao */
+.zoom {
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  max-width: min(92vw, 560px);
+  max-height: 92vh;
+  overflow: visible;
+}
+.zoom::backdrop {
+  background: rgba(2,4,10,.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.zoom img {
+  display: block;
+  max-width: 100%;
+  max-height: 92vh;
+  width: auto;
+  margin-inline: auto;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 40px 100px -20px rgba(0,0,0,1), 0 0 60px -20px rgba(11,98,255,.6);
+}
+.zoom[open] { animation: zoomIn .35s var(--ease-out); }
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(.94); }
+  to   { opacity: 1; transform: none; }
+}
+.zoom__close {
+  position: absolute;
+  top: -16px; right: -16px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.3);
+  background: linear-gradient(140deg, var(--blue-hi), var(--blue) 60%, var(--blue-lo));
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 30px -8px rgba(11,98,255,.8);
+}
+.zoom__close svg { width: 18px; height: 18px; }
+@media (max-width: 620px) { .zoom__close { top: -54px; right: 0; } }
+
+/* ------------------------------------------------ 06. INSCRICAO -------- */
+.cta-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: clamp(34px, 5vw, 76px);
+  align-items: center;
+}
+.cta-grid > * { min-width: 0; }
+@media (max-width: 960px) { .cta-grid { grid-template-columns: 1fr; } }
+
+/* os tres selos sempre na mesma linha, nunca empilhados */
+.cta-pills { display: flex; flex-wrap: nowrap; gap: 8px; margin-top: 30px; }
+.cta-pills .chip { font-size: .8rem; padding: 9px 16px; letter-spacing: .06em; text-transform: uppercase; }
+.cta-pills .chip svg { width: 15px; height: 15px; color: var(--blue-soft); }
+/* No celular os tres nao cabem lado a lado em uma linha de texto: viram
+   tres colunas iguais na mesma fileira, e o texto quebra dentro do selo. */
+@media (max-width: 520px) {
+  .cta-pills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .cta-pills .chip {
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.25;
+    font-size: .64rem;
+    padding: 9px 6px;
+    letter-spacing: .02em;
+    gap: 6px;
+    border-radius: 14px;
+  }
+  .cta-pills .chip svg { display: none; }
+}
+
+.form-card {
+  padding: clamp(26px, 3.2vw, 42px);
+  border-radius: var(--r-xl);
+}
+.form-card__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 15px 7px 12px;
+  border-radius: var(--r-pill);
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #d8f9ef;
+  background: linear-gradient(120deg, rgba(87,230,196,.22), rgba(87,230,196,.06));
+  border: 1px solid rgba(87,230,196,.4);
+  margin-bottom: 18px;
+}
+.form-card h3 { font-size: clamp(1.25rem, 2vw, 1.7rem); margin-bottom: 10px; }
+.form-card__intro { color: var(--muted); font-size: .95rem; margin-bottom: 26px; }
+
+.form-card .btn { width: 100%; justify-content: space-between; }
+.btn--wa .btn__ico { color: #12a94f; }
+.btn--wa .btn__ico svg { width: 22px; height: 22px; }
+
+/* --------------------------------------------------------- FOOTER ------- */
+.footer {
+  position: relative;
+  padding: clamp(48px, 6vw, 84px) 0 30px;
+  isolation: isolate;
+  overflow: clip;
+}
+.footer__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: clamp(28px, 3.4vw, 44px);
+}
+.footer__brand { display: flex; align-items: center; gap: 18px; }
+.footer__brand p { font-size: .92rem; color: var(--muted); max-width: 40ch; line-height: 1.55; }
+.footer__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+
+/* link do Instagram: pilula discreta, o CTA continua sendo o destaque */
+.social {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px 6px 6px;
+  border-radius: var(--r-pill);
+  font-size: .9rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.82);
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.social__ico {
+  display: grid;
+  place-items: center;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(140deg, rgba(77,155,255,.5), rgba(11,98,255,.22));
+  border: 1px solid rgba(120,175,255,.4);
+  transition: background var(--t-fast) var(--ease);
+}
+.social__ico svg { width: 18px; height: 18px; }
+.social:hover { color: #fff; border-color: rgba(120,175,255,.5); background: rgba(77,155,255,.10); }
+.social:hover .social__ico { background: linear-gradient(140deg, var(--blue-hi), var(--blue)); }
+.footer__bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  justify-content: space-between;
+  font-size: .78rem;
+  color: var(--faint);
+}
+.footer__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.footer__tags li { display: inline-flex; align-items: center; gap: 14px; }
+.footer__tags li + li::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  box-shadow: 0 0 8px rgba(77,155,255,.9);
+}
+
+@media (max-width: 860px) {
+  /* padding de baixo livra o CTA flutuante */
+  .footer { padding: 56px 0 108px; text-align: center; }
+  .footer .fx-spot--bl { --sx: 50%; --sy: 22%; }
+  .footer__top { flex-direction: column; gap: 26px; padding-bottom: 32px; }
+  .footer__brand { flex-direction: column; gap: 16px; }
+  .footer .logo { width: 58px; }
+  .footer__brand p { max-width: 30ch; font-size: .9rem; }
+  .footer__actions { flex-direction: column-reverse; width: 100%; gap: 16px; }
+  .footer__top .btn { width: 100%; max-width: 380px; justify-content: space-between; }
+  .footer__bottom {
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+    padding-top: 22px;
+  }
+  .footer__tags { justify-content: center; flex-wrap: nowrap; gap: 6px; }
+  .footer__tags li {
+    padding: 6px 11px;
+    border-radius: var(--r-pill);
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.04);
+    color: rgba(255,255,255,.72);
+    font-size: .68rem;
+    white-space: nowrap;
+  }
+  .footer__tags li + li::before { display: none; }
+}
+
+/* ------------------------------------------------ CELULAR --------------- */
+/* Headline, subheadline e selos do hero centralizados; rotulo de botao
+   nunca quebra. As outras secoes seguem alinhadas a esquerda. */
+@media (max-width: 860px) {
+  .hero h1,
+  .hero .lead { text-align: center; }
+  .hero__meta { justify-content: center; }
+
+  .btn__label { white-space: nowrap; }
+  .btn--lg { font-size: .98rem; padding-left: 24px; gap: 10px; }
+  .btn--lg .btn__ico { width: 44px; height: 44px; }
+  .content-cta .btn { width: 100%; justify-content: space-between; }
+  .form-card { padding: 24px 20px; }
+  .form-card .btn { font-size: .92rem; padding-left: 20px; }
+
+  /* Botao do hero e o flutuante: frase no centro do botao. O recuo do
+     rotulo e o circulo mais o gap, entao o texto centraliza no botao
+     inteiro e nao so no espaco que sobra ao lado do icone. */
+  .hero__actions .btn,
+  .sticky-cta .btn { padding-left: 9px; }
+  .hero__actions .btn__label,
+  .sticky-cta .btn__label { flex: 1; text-align: center; padding-left: 54px; }
+  .sticky-cta .btn__label { padding-left: 56px; }
+}
+@media (max-width: 380px) {
+  .btn, .btn--lg { font-size: .88rem; padding-left: 18px; }
+  .btn--lg .btn__ico { width: 40px; height: 40px; }
+  .form-card .btn { font-size: .86rem; padding-left: 18px; }
+  .hero__actions .btn__label { padding-left: 50px; }
+}
+
+/* ------------------------------------------------ CTA FLUTUANTE -------- */
+.sticky-cta {
+  position: fixed;
+  left: 14px; right: 14px;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  z-index: 190;
+  display: none;
+  transform: translateY(140%);
+  transition: transform .5s var(--ease-out);
+}
+.sticky-cta.is-on { transform: none; }
+.sticky-cta .btn { width: 100%; justify-content: space-between; box-shadow: 0 20px 50px -10px rgba(0,0,0,.9), var(--shadow-blue); }
+@media (max-width: 860px) { .sticky-cta { display: block; } }
+</style>
+</head>
+
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WD6R2JDK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- grao de filme: uma camada fixa para a pagina toda -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- barra de progresso do scroll -->
+<div class="progress" data-progress aria-hidden="true"></div>
+
+<!-- ====================================================== HEADER ======== -->
+<header class="header" data-header>
+  <div class="header__scrim" aria-hidden="true"></div>
+  <div class="header__bar">
+    <a class="brand" href="#home" aria-label="Imobiliária Previsível, ir para o topo">
+      <img class="logo" src="{{ url_for('static', filename='image/logo.webp') }}" alt="" width="302" height="240">
+      <span class="brand__name">Imobiliária<br>Previsível</span>
+    </a>
+
+    <nav class="nav" data-nav-menu aria-label="Navegação principal">
+      <a href="#home" data-spy class="is-active"><span>A live</span></a>
+      <a href="#cenario" data-spy><span>O cenário</span></a>
+      <a href="#conteudo" data-spy><span>O que você vai ver</span></a>
+      <a href="#pedro" data-spy><span>Pedro Lucas</span></a>
+      <a href="{{ grupo_whatsapp }}" target="_blank" rel="noopener" data-keep-utm class="nav__cta" data-cta="menu-grupo"><span>Quero participar da live</span></a>
+    </nav>
+
+    <div class="header__end">
+      <a class="btn btn--sm" href="{{ grupo_whatsapp }}" target="_blank" rel="noopener" data-keep-utm data-cta="header-grupo">
+        <span class="btn__label">Garantir vaga</span>
+        <span class="btn__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+      <button class="burger" data-nav-toggle aria-label="Abrir menu" aria-expanded="false" type="button">
+        <i></i><i></i><i></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ================================================ 01. HERO =========== -->
+<section class="hero" id="home">
+  <picture class="hero__media">
+    <source media="(max-width: 860px)" srcset="{{ url_for('static', filename='image/banner-mobile.webp') }}" width="941" height="1672">
+    <img src="{{ url_for('static', filename='image/banner-pc.webp') }}" alt="" fetchpriority="high" decoding="async" width="1672" height="941">
+  </picture>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="hero__inner">
+    <div class="hero__copy">
+      <span class="eyebrow eyebrow--live" data-reveal><i class="live-dot" aria-hidden="true"></i>Live gratuita para donos de imobiliárias</span>
+
+      <h1 class="reveal-lines">
+        <span><i>Enquanto algumas</i></span><br>
+        <span><i><em class="grad-blue">imobiliárias</em> esperam</i></span><br>
+        <span><i>o cenário mudar,</i></span><br>
+        <span><i>outras preparam as</i></span><br>
+        <span><i class="grad-blue">próximas vendas.</i></span>
+      </h1>
+
+      <p class="lead" data-reveal style="--d:.5s">
+        No dia <strong>14 de outubro</strong>, você vai entender processos e indicadores
+        que ajudam a imobiliária a vender mesmo em um cenário de incerteza.
+      </p>
+
+      <div class="hero__actions" data-reveal style="--d:.65s">
+        <a class="btn btn--lg" href="{{ grupo_whatsapp }}" target="_blank" rel="noopener" data-keep-utm data-cta="hero-grupo">
+          <span class="btn__label">Quero participar da live</span>
+          <span class="btn__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </div>
+
+      <ul class="hero__meta" data-reveal style="--d:.8s">
+        <li><i class="live-dot" aria-hidden="true"></i>100% ao vivo</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Inscrição gratuita</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- badges sobre o banner, contornando o rosto -->
+  <div class="hero__chips" aria-hidden="true">
+    <span class="chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
+      14 de outubro
+    </span>
+    <span class="chip chip--dot">100% ao vivo</span>
+    <span class="chip">Com Pedro Lucas</span>
+  </div>
+</section>
+
+<!-- ================================================ 02. O CENARIO ====== -->
+<section class="section" data-sec id="cenario">
+  <div class="fx fx-photo fx-photo--right scroll-drift"></div>
+  <div class="fx fx-veil"></div>
+
+  <div class="wrap">
+    <header class="sec-head scroll-par">
+      <span class="eyebrow" data-reveal>O cenário não explica tudo</span>
+      <h2 data-reveal="mask" style="--d:.08s">Se o mercado fosse o único problema, todas as imobiliárias teriam o mesmo resultado.</h2>
+      <p class="lead" data-reveal style="--d:.16s">
+        Juros e crédito influenciam o comprador, mas muitas vendas são perdidas dentro da
+        própria operação.
+      </p>
+    </header>
+
+    <div class="pain-grid" data-stagger="0.08">
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">01</span>
+        <h3>Cada corretor atende de um jeito</h3>
+      </article>
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">02</span>
+        <h3>Oportunidades ficam paradas</h3>
+      </article>
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">03</span>
+        <h3>Mais leads, as mesmas vendas</h3>
+      </article>
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">04</span>
+        <h3>Marketing e comercial se culpam</h3>
+      </article>
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">05</span>
+        <h3>Mês começa sem uma carteira previsível</h3>
+      </article>
+    </div>
+
+    <div class="glass edge-lit statement" data-reveal="zoom">
+      <h3>O problema pode não ser a falta de oportunidades, <span class="grad-blue">mas o que acontece com elas depois que entram na imobiliária.</span></h3>
+      <a class="btn btn--glass" href="#conteudo">
+        <span class="btn__label">Ver o que a live aborda</span>
+        <span class="btn__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ 03. CONTEUDO ======= -->
+<section class="section" data-sec id="conteudo">
+  <div class="fx fx-aurora scroll-drift"></div>
+  <div class="fx fx-veil--center"></div>
+
+  <div class="wrap">
+    <header class="sec-head scroll-par">
+      <span class="eyebrow" data-reveal>Da oportunidade à venda</span>
+      <h2 data-reveal="mask" style="--d:.08s">Conecte marketing e vendas em uma <span class="grad-blue">operação mais previsível.</span></h2>
+      <p class="lead" data-reveal style="--d:.16s">
+        Na live, você vai entender o que acompanhar, organizar e corrigir no caminho do
+        lead até o contrato.
+      </p>
+    </header>
+
+    <div class="topic-grid" data-stagger="0.07">
+      <article class="card topic" data-reveal="tilt">
+        <div class="topic__top">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/></svg>
+          </span>
+          <span class="card__num">01</span>
+        </div>
+        <h3>Descubra onde as vendas são perdidas</h3>
+      </article>
+
+      <article class="card topic" data-reveal="tilt">
+        <div class="topic__top">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="18" rx="2.5"/><path d="M9 3.5h6v3H9z"/><path d="M8.5 12l2 2 4-4"/><path d="M8.5 17h7"/></svg>
+          </span>
+          <span class="card__num">02</span>
+        </div>
+        <h3>Crie um padrão de atendimento</h3>
+      </article>
+
+      <article class="card topic" data-reveal="tilt">
+        <div class="topic__top">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.6L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.5 4.6L20 16"/><path d="M20 20.5V16h-4.5"/></svg>
+          </span>
+          <span class="card__num">03</span>
+        </div>
+        <h3>Organize o refugo</h3>
+      </article>
+
+      <article class="card topic" data-reveal="tilt">
+        <div class="topic__top">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><path d="M9 12h6"/><path d="M6 9V5h12v4M6 15v4h12v-4"/></svg>
+          </span>
+          <span class="card__num">04</span>
+        </div>
+        <h3>Conecte marketing e vendas</h3>
+      </article>
+
+      <article class="card topic" data-reveal="tilt">
+        <div class="topic__top">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5.5-5.5 3.5 3.5L21 6"/><path d="M15 6h6v6"/><path d="M3 21h18"/></svg>
+          </span>
+          <span class="card__num">05</span>
+        </div>
+        <h3>Projete a próxima meta</h3>
+      </article>
+
+      <article class="card topic" data-reveal="tilt">
+        <div class="topic__top">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.1 5.4L19.5 10l-5.4 2.1L12 17.5 9.9 12.1 4.5 10l5.4-1.6z"/><path d="M18.5 16.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
+          </span>
+          <span class="card__num">06</span>
+        </div>
+        <h3>Use tecnologia com estratégia</h3>
+      </article>
+    </div>
+
+    <div class="glass glass--blue edge-lit content-close" data-reveal="zoom">
+      <p>
+        Tenha clareza para transformar <b>investimento em oportunidades</b> e
+        <b>oportunidades em vendas</b>.
+      </p>
+      <a class="btn btn--lg" href="{{ grupo_whatsapp }}" target="_blank" rel="noopener" data-keep-utm data-cta="conteudo-grupo">
+        <span class="btn__label">Quero participar da live</span>
+        <span class="btn__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+    </div>
+
+    <div class="content-cta" data-reveal style="--d:.1s">
+      <a class="btn btn--lg" href="{{ grupo_whatsapp }}" target="_blank" rel="noopener" data-keep-utm data-cta="conteudo-grupo">
+        <span class="btn__label">Quero participar da live</span>
+        <span class="btn__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ 04. PEDRO LUCAS ==== -->
+<section class="section" data-sec id="pedro">
+  <div class="fx fx-photo fx-photo--left scroll-drift"></div>
+  <div class="fx fx-veil fx-veil--mirror"></div>
+
+  <div class="wrap host-grid">
+    <figure class="host-photo" data-reveal="left">
+      <img src="{{ url_for('static', filename='image/pedro.webp') }}" alt="Pedro Lucas, apresentador da live Imobiliária Previsível" width="853" height="1280" loading="lazy" decoding="async">
+      <figcaption class="host-photo__tag">
+        <strong>Pedro Lucas</strong>
+        <span class="chip chip--dot">Apresentador</span>
+      </figcaption>
+    </figure>
+
+    <div class="host-copy">
+      <span class="eyebrow" data-reveal>Quem é Pedro Lucas</span>
+      <h2 data-reveal="mask" style="--d:.08s; margin-top:20px">6 anos conectando <span class="grad-blue">marketing, vendas</span> e crescimento.</h2>
+      <p class="lead" data-reveal style="--d:.16s">
+        Há 6 anos, Pedro Lucas atua aproximando marketing e vendas e já auxiliou mais de
+        150 empresas na construção de estratégias de crescimento.
+      </p>
+      <p class="lead" data-reveal style="--d:.22s">
+        Seu trabalho conecta os dados gerados pelo marketing aos indicadores do funil
+        comercial, acompanhando como os leads avançam pela qualificação, visita, proposta
+        e venda. Essa visão integrada permite transformar informações em decisões e
+        alinhar a geração de oportunidades ao resultado comercial.
+      </p>
+
+      <div class="host-stats" data-stagger="0.1">
+        <div class="card stat" data-reveal="tilt" data-no-tilt>
+          <span class="stat__num grad-blue">6 anos</span>
+          <p>aproximando marketing e vendas</p>
+        </div>
+        <div class="card stat" data-reveal="tilt" data-no-tilt>
+          <span class="stat__num grad-blue">+150</span>
+          <p>empresas auxiliadas na construção de estratégias de crescimento</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ 05. DEPOIMENTOS ==== -->
+<section class="section" data-sec id="depoimentos">
+  <div class="fx fx-mesh"></div>
+  <div class="fx fx-spot fx-spot--tr scroll-drift"></div>
+  <div class="fx fx-spot fx-spot--corner hide-sm"></div>
+
+  <div class="wrap">
+    <header class="sec-head scroll-par">
+      <span class="eyebrow" data-reveal>Resultados que reforçam essa visão</span>
+      <h2 data-reveal="mask" style="--d:.08s">Quem acompanhou esse trabalho conta como foi a experiência.</h2>
+      <p class="lead" data-reveal style="--d:.16s">
+        Confira os relatos de empresários que buscaram mais conexão entre estratégia,
+        marketing e vendas.
+      </p>
+    </header>
+
+    <!-- Prints reais de clientes. Para trocar: coloque o original em
+         statics/ e rode python gerar_imagens.py. -->
+    <div class="proof-grid" data-stagger="0.09">
+      <figure class="proof" data-reveal="tilt">
+        <button class="proof__shot" type="button" data-zoom="{{ url_for('static', filename='image/depoimento-1.webp') }}" aria-label="Ampliar print: venda de R$ 372 mil fechada a partir de um lead">
+          <img src="{{ url_for('static', filename='image/depoimento-1.webp') }}" alt="Print de conversa no WhatsApp: venda de R$ 372 mil fechada a partir de um lead" width="739" height="808" loading="lazy" decoding="async">
+          <span class="proof__zoom" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2M11 8.5v5M8.5 11h5"/></svg>
+          </span>
+        </button>
+        <figcaption class="proof__cap">
+          <span class="proof__num grad-blue">R$ 372 mil</span>
+          <span class="proof__txt">apartamento vendido para um lead</span>
+        </figcaption>
+      </figure>
+      <figure class="proof" data-reveal="tilt">
+        <button class="proof__shot" type="button" data-zoom="{{ url_for('static', filename='image/depoimento-2.webp') }}" style="--pos: center bottom" aria-label="Ampliar print: três vendas geradas por leads em julho">
+          <img src="{{ url_for('static', filename='image/depoimento-2.webp') }}" alt="Print de conversa no WhatsApp: três vendas geradas por leads em julho" width="739" height="1038" loading="lazy" decoding="async">
+          <span class="proof__zoom" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2M11 8.5v5M8.5 11h5"/></svg>
+          </span>
+        </button>
+        <figcaption class="proof__cap">
+          <span class="proof__num grad-blue">3 vendas</span>
+          <span class="proof__txt">geradas por leads em um único mês</span>
+        </figcaption>
+      </figure>
+      <figure class="proof" data-reveal="tilt">
+        <button class="proof__shot" type="button" data-zoom="{{ url_for('static', filename='image/depoimento-3.webp') }}" style="--pos: center bottom" aria-label="Ampliar print: 25 vendas e R$ 16,5 milhões gerados no ano, ROAS 193">
+          <img src="{{ url_for('static', filename='image/depoimento-3.webp') }}" alt="Print de conversa no WhatsApp: 25 vendas e R$ 16,5 milhões gerados no ano, ROAS 193" width="739" height="1254" loading="lazy" decoding="async">
+          <span class="proof__zoom" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2M11 8.5v5M8.5 11h5"/></svg>
+          </span>
+        </button>
+        <figcaption class="proof__cap">
+          <span class="proof__num grad-blue">ROAS 193</span>
+          <span class="proof__txt">25 vendas e R$ 16,5 mi gerados no ano</span>
+        </figcaption>
+      </figure>
+      <figure class="proof" data-reveal="tilt">
+        <button class="proof__shot" type="button" data-zoom="{{ url_for('static', filename='image/depoimento-4.webp') }}" aria-label="Ampliar print: venda de R$ 378 mil à vista">
+          <img src="{{ url_for('static', filename='image/depoimento-4.webp') }}" alt="Print de conversa no WhatsApp: venda de R$ 378 mil à vista" width="739" height="750" loading="lazy" decoding="async">
+          <span class="proof__zoom" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2M11 8.5v5M8.5 11h5"/></svg>
+          </span>
+        </button>
+        <figcaption class="proof__cap">
+          <span class="proof__num grad-blue">R$ 378 mil</span>
+          <span class="proof__txt">venda fechada à vista</span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ 06. INSCRICAO ====== -->
+<section class="section" data-sec id="inscricao">
+  <div class="fx fx-photo fx-photo--top fx-photo--cool scroll-drift"></div>
+  <div class="fx fx-veil"></div>
+
+  <div class="wrap cta-grid">
+    <div>
+      <span class="eyebrow" data-reveal>Live gratuita no dia 14 de outubro</span>
+      <h2 data-reveal="mask" style="--d:.08s; margin-top:20px">
+        Prepare sua imobiliária para <span class="grad-blue">vender no cenário que existe.</span>
+      </h2>
+      <p class="lead" data-reveal style="--d:.16s; margin-top:24px">
+        Na live, você vai acompanhar o caminho do lead até o contrato e entender como
+        construir uma carteira capaz de sustentar os próximos meses.
+      </p>
+
+      <div class="cta-pills" data-reveal style="--d:.3s">
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
+          14 de outubro
+        </span>
+        <span class="chip chip--dot">100% ao vivo</span>
+        <span class="chip">Inscrição gratuita</span>
+      </div>
+    </div>
+
+    <div class="glass glass--blur edge-lit form-card" data-reveal="right" style="--d:.2s">
+      <span class="form-card__tag"><i class="live-dot" aria-hidden="true"></i>Inscrição gratuita</span>
+      <h3>Garanta sua participação</h3>
+      <p class="form-card__intro">Entre no grupo da live no WhatsApp para receber as informações e o acesso à live.</p>
+
+      <a class="btn btn--lg btn--wa" href="{{ grupo_whatsapp }}" target="_blank" rel="noopener" data-keep-utm data-cta="final-grupo">
+        <span class="btn__label">Quero garantir minha vaga<span class="hide-sm"> gratuita</span></span>
+        <span class="btn__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.24 8.24 0 0 1 0 16.48m4.52-6.17c-.25-.12-1.47-.72-1.69-.81s-.39-.12-.56.13-.64.8-.79.97-.29.19-.54.06a6.7 6.7 0 0 1-1.98-1.22 7.4 7.4 0 0 1-1.37-1.7c-.14-.25-.01-.38.11-.5s.25-.29.37-.44.17-.25.25-.42a.46.46 0 0 0-.02-.44c-.06-.13-.56-1.35-.77-1.84s-.4-.43-.56-.43l-.47-.01a.9.9 0 0 0-.66.31 2.77 2.77 0 0 0-.87 2.06 4.8 4.8 0 0 0 1.01 2.56c.12.16 1.75 2.67 4.23 3.74a14 14 0 0 0 1.41.52 3.4 3.4 0 0 0 1.56.1c.48-.07 1.47-.6 1.68-1.18s.21-1.08.14-1.18-.22-.16-.47-.28"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ====================================================== FOOTER ======== -->
+<footer class="footer" data-sec>
+  <div class="fx fx-spot fx-spot--bl"></div>
+
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img class="logo" src="{{ url_for('static', filename='image/logo.webp') }}" alt="" width="302" height="240" loading="lazy">
+        <p>Imobiliária Previsível · Live gratuita para donos e gestores de imobiliárias, com Pedro Lucas.</p>
+      </div>
+      <div class="footer__actions">
+        <a class="social" href="https://www.instagram.com/groupconnecta/" target="_blank" rel="noopener" data-track="click_instagram" aria-label="Instagram da Connecta: @groupconnecta">
+          <span class="social__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg>
+          </span>
+          @groupconnecta
+        </a>
+        <a class="btn btn--glass" href="{{ grupo_whatsapp }}" target="_blank" rel="noopener" data-keep-utm data-cta="footer-grupo">
+          <span class="btn__label">Quero participar da live</span>
+          <span class="btn__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <ul class="footer__tags">
+        <li>14 de outubro</li>
+        <li>100% ao vivo</li>
+        <li>Inscrição gratuita</li>
+      </ul>
+      <span>© <span id="ano">2026</span> Imobiliária Previsível. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ampliacao dos prints de depoimento -->
+<dialog class="zoom" data-zoom-box aria-label="Print ampliado">
+  <button class="zoom__close" type="button" data-zoom-close aria-label="Fechar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <img alt="">
+</dialog>
+
+<!-- CTA flutuante no celular -->
+<div class="sticky-cta" data-sticky-cta>
+  <a class="btn" href="{{ grupo_whatsapp }}" target="_blank" rel="noopener" data-keep-utm data-cta="sticky-grupo">
+    <span class="btn__label">Quero participar da live</span>
+    <span class="btn__ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </span>
+  </a>
+</div>
+
+<script src="{{ url_for('static', filename='js/lp.js') }}" defer></script>
+<script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+
+<!-- Dados estruturados -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "Imobiliária Previsível",
+  "description": "Live gratuita para donos e gestores de imobiliárias: processos e indicadores que ajudam a imobiliária a vender mesmo em um cenário de incerteza.",
+  "startDate": "2026-10-14",
+  "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "isAccessibleForFree": true,
+  "inLanguage": "pt-BR",
+  "image": "{{ url_for('static', filename='image/og.jpg', _external=True) }}",
+  "location": {
+    "@type": "VirtualLocation",
+    "url": "{{ request.base_url }}"
+  },
+  "performer": {
+    "@type": "Person",
+    "name": "Pedro Lucas"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL",
+    "availability": "https://schema.org/InStock",
+    "url": "{{ request.base_url }}#inscricao"
+  }
+}
+</script>
+
+</body>
+</html>

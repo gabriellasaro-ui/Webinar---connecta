@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- ===================== SEO ===================== -->
+<title>Trace · Design sob demanda para agências de marketing</title>
+<meta name="description" content="O Trace é o time de design sob demanda e white label que dá mais capacidade de entrega para agências de marketing, sem aumentar a equipe interna.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Studio Trace">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://studiotrace.com.br/">
+
+<!-- ===================== Open Graph ===================== -->
+<meta property="og:site_name" content="Studio Trace">
+<meta property="og:title" content="Trace · Design sob demanda para agências de marketing">
+<meta property="og:description" content="Sua agência não precisa de mais um designer. Precisa de mais capacidade. Design white label, sob demanda, feito para agências.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://studiotrace.com.br/">
+<meta property="og:image" content="{{ url_for('static', filename='image/banner-pc.webp', _external=True) }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Trace · Design sob demanda para agências de marketing">
+<meta name="twitter:description" content="Mais capacidade de entrega para sua agência, sem aumentar a estrutura interna.">
+<meta name="twitter:image" content="{{ url_for('static', filename='image/banner-pc.webp', _external=True) }}">
+
+<!-- ===================== Assets ===================== -->
+<link rel="icon" href="{{ url_for('static', filename='image/logo.webp') }}" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="font" type="font/otf" crossorigin href="{{ url_for('static', filename='fonts/Drupadi-Regular.otf') }}">
+<link rel="preload" as="image" href="{{ url_for('static', filename='image/banner-pc.webp') }}" media="(min-width: 861px)">
+<link rel="preload" as="image" href="{{ url_for('static', filename='image/banner-mobile.webp') }}" media="(max-width: 860px)">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/trace.css') }}">
+
+<!-- ===================== Tracking base obrigatorio ===================== -->
+<script src="{{ url_for('static', filename='tracking.js') }}" defer></script>
+
+<style>
+/* ==========================================================================
+   Estilos especificos desta LP. O sistema compartilhado vive em trace.css.
+   ========================================================================== */
+
+/* ---------------------------------------------------------- HEADER ------ */
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 200;
+  padding: 18px var(--pad-x);
+  transition: padding .4s var(--ease), background .4s var(--ease);
+}
+/* Fixo de verdade: nao se recolhe mais ao descer. Como o conteudo passa por
+   baixo dele o tempo todo, a cortina fecha mais que antes. */
+.header.is-stuck {
+  padding-block: 11px;
+  background: linear-gradient(180deg, rgba(0,0,0,.96) 0%, rgba(0,0,0,.86) 45%, rgba(0,0,0,.55) 74%, rgba(0,0,0,0) 100%);
+}
+
+/* Cortina do menu mobile. Sem ela o conteudo da pagina vazava por tras do
+   painel de vidro e o menu ficava ilegivel. */
+.header__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(2,4,10,.86);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .38s var(--ease), visibility .38s;
+}
+.header.is-open .header__scrim { opacity: 1; visibility: visible; }
+body.nav-aberta { overflow: hidden; }
+
+.header__bar {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+}
+
+.logo {
+  width: clamp(76px, 7vw, 104px);
+  height: auto; /* o atributo height do img nao pode virar altura fixa */
+  filter: brightness(0) invert(1);
+  transition: opacity var(--t-fast) var(--ease);
+}
+.logo:hover { opacity: .78; }
+
+/* pilula de navegacao de vidro, igual ao direcionamento visual */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: var(--r-pill);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.20);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: 0 14px 40px -16px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.nav a {
+  position: relative;
+  padding: 10px 22px;
+  border-radius: var(--r-pill);
+  font-size: .92rem;
+  color: rgba(255,255,255,.74);
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.nav a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(150deg, rgba(255,255,255,.20), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.22);
+  opacity: 0;
+  transform: scale(.86);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.nav a > span { position: relative; }
+.nav a:hover { color: #fff; }
+.nav a.is-active { color: #fff; }
+.nav a.is-active::before { opacity: 1; transform: scale(1); }
+
+.social { display: flex; align-items: center; gap: 14px; }
+.social a {
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  color: rgba(255,255,255,.82);
+  transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.social a:hover { color: #fff; background: rgba(255,255,255,.10); transform: translateY(-2px); }
+.social svg { width: 19px; height: 19px; }
+
+.burger {
+  display: none;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: rgba(14,18,30,.72);
+  border: 1px solid rgba(255,255,255,.22);
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.burger i {
+  display: block;
+  width: 18px; height: 1.5px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform .35s var(--ease), opacity .25s var(--ease);
+}
+.burger i + i { margin-top: 5px; }
+.header.is-open .burger i:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.header.is-open .burger i:nth-child(2) { opacity: 0; }
+.header.is-open .burger i:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+@media (max-width: 1080px) {
+  .burger { display: flex; }
+  .social { display: none; }
+  .nav {
+    position: fixed;
+    inset: 84px 16px auto 16px;
+    background: linear-gradient(170deg, rgba(20,26,42,.96), rgba(4,6,14,.98));
+    border-color: rgba(255,255,255,.16);
+    box-shadow: 0 34px 80px -20px rgba(0,0,0,1);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 14px;
+    border-radius: var(--r-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-14px) scale(.98);
+    transition: opacity .35s var(--ease), transform .35s var(--ease), visibility .35s;
+  }
+  .header.is-open .nav { opacity: 1; visibility: visible; transform: none; }
+  .nav a { padding: 15px 20px; font-size: 1.02rem; }
+}
+
+/* ------------------------------------------------------------ HERO ------ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: 150px 90px;
+  isolation: isolate;
+  overflow: hidden;
+}
+.hero__media { position: absolute; inset: 0; z-index: -3; }
+.hero__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 72% center;
+}
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(90deg, #000 6%, rgba(0,0,0,.86) 32%, rgba(0,0,0,.20) 60%, rgba(0,0,0,.35) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.72) 0%, transparent 26%, transparent 52%, #000 96%);
+}
+
+/* A hero nao e .section, entao ganha aqui a mesma dissolucao no rodape que
+   as outras tem. Sem isso o banner terminava num corte seco. */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 26%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.45) 44%, rgba(0,0,0,.88) 78%, #000 100%);
+}
+.hero__inner {
+  position: relative;
+  width: 100%;
+  /* container mais largo e com folga menor: puxa a headline para a esquerda */
+  max-width: 1540px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 3.2vw, 50px);
+}
+.hero__copy { max-width: 640px; }
+.hero h1 { margin-bottom: 28px; }
+.hero .lead { max-width: 44ch; margin-bottom: 38px; }
+
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+
+/* chips flutuantes sobre a foto, ancorados no container do hero */
+/* Na altura do rosto, mas contornando ele: dois na faixa escura a esquerda
+   e um na borda direita. O rosto do Ryan fica livre. */
+.hero__chips {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.hero__chips .chip { position: absolute; pointer-events: auto; }
+/* Limites medidos na propria arte do banner: no meio da altura o Ryan
+   ocupa de 68% a 87% da largura. Os badges param antes e depois disso. */
+.hero__chips .chip:nth-child(1) { left: 56%; top: 52%; animation: float 7s var(--ease) infinite alternate; }
+.hero__chips .chip:nth-child(2) { right: 5%; top: 59%; animation: float 8.5s var(--ease) .6s infinite alternate-reverse; }
+.hero__chips .chip:nth-child(3) { left: 58%; top: 67%; animation: float 9.5s var(--ease) 1.2s infinite alternate; font-size: 1rem; padding: 14px 28px; }
+
+@keyframes float {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, -16px, 0); }
+}
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  font-size: .66rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.42);
+  z-index: 3;
+}
+.scroll-cue i {
+  width: 1px; height: 46px;
+  background: linear-gradient(180deg, rgba(255,255,255,.55), transparent);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-cue i::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 14px;
+  background: var(--blue-soft);
+  box-shadow: 0 0 10px 2px rgba(77,155,255,.85);
+  animation: cue 2.1s var(--ease) infinite;
+}
+@keyframes cue {
+  0%   { transform: translateY(-16px); opacity: 0; }
+  35%  { opacity: 1; }
+  100% { transform: translateY(48px); opacity: 0; }
+}
+
+@media (max-width: 1180px) {
+  .hero__chips .chip { font-size: .78rem; padding: 9px 15px; }
+  .hero__chips .chip:nth-child(3) { font-size: .82rem; padding: 10px 18px; }
+  .hero__chips .chip:nth-child(1) { left: 56%; top: 50%; }
+  .hero__chips .chip:nth-child(3) { left: 58%; top: 65%; }
+}
+
+@media (max-width: 860px) {
+  .hero {
+    align-items: flex-end;
+    padding-block: 120px 78px;
+  }
+  .hero__media img { object-position: center top; }
+  .hero__scrim {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.08) 16%, rgba(0,0,0,.60) 44%, #000 64%);
+  }
+  .hero__copy { max-width: none; }
+  .hero h1 { margin-bottom: 22px; }
+  .hero .lead { max-width: none; margin-bottom: 30px; }
+  /* No celular os badges saem de cena. Na vertical eles cobriam o rosto do
+     Ryan e empurravam a headline: a arte do banner mobile ja diz o mesmo. */
+  .hero__chips { display: none; }
+  .scroll-cue { display: none; }
+}
+
+/* Em seções de duas colunas o título vive num espaço mais estreito,
+   então ganha um degrau a menos na escala. */
+.solution-grid h2,
+.cta-grid h2 { font-size: clamp(1.5rem, 2.5vw, 2.35rem); }
+
+/* -------------------------------------------------------- 02. A DOR ----- */
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(10px, 1vw, 15px);
+}
+.pain-grid > * { grid-column: span 2; }
+.pain-grid > *:nth-child(4),
+.pain-grid > *:nth-child(5) { grid-column: span 3; }
+
+.pain-card { display: grid; gap: 10px; align-content: start; min-height: 152px; }
+.pain-card p { font-size: .94rem; line-height: 1.55; color: rgba(255,255,255,.80); }
+
+@media (max-width: 980px) {
+  .pain-grid { grid-template-columns: repeat(2, 1fr); }
+  .pain-grid > *:nth-child(n) { grid-column: span 1; }
+  .pain-grid > *:nth-child(5) { grid-column: span 2; }
+}
+@media (max-width: 620px) {
+  .pain-grid { grid-template-columns: 1fr; }
+  .pain-grid > *:nth-child(n) { grid-column: span 1; }
+  .pain-card { min-height: 0; }
+}
+
+.statement {
+  margin-top: clamp(28px, 3.4vw, 48px);
+  padding: clamp(28px, 3.4vw, 46px) clamp(26px, 3.6vw, 54px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  border-radius: var(--r-xl);
+}
+.statement h3 { font-size: clamp(1.4rem, 2.5vw, 2.2rem); }
+
+/* ------------------------------------------------------ 03. SOLUCAO ----- */
+.solution-grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: clamp(30px, 4vw, 70px);
+  align-items: center;
+}
+.solution-grid > * { min-width: 0; }
+@media (max-width: 900px) { .solution-grid { grid-template-columns: 1fr; } }
+
+.steps-inline { display: grid; gap: 10px; }
+.steps-inline li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-radius: var(--r-md);
+  background: linear-gradient(150deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+  border: 1px solid rgba(255,255,255,.11);
+  transition: transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.steps-inline li:hover {
+  transform: translateX(8px);
+  border-color: rgba(77,155,255,.42);
+  background: rgba(11,98,255,.10);
+}
+.steps-inline b {
+  font-family: 'Drupadi', sans-serif;
+  font-weight: 400;
+  color: var(--blue-soft);
+  font-size: 1.05rem;
+  flex: none;
+}
+
+/* fluxo AGENCIA > BRIEFING > TRACE > DESIGN > CLIENTE */
+.flow {
+  display: grid;
+  gap: 12px;
+  margin-top: clamp(38px, 4.5vw, 66px);
+  padding: clamp(24px, 3vw, 44px);
+  border-radius: var(--r-xl);
+}
+.flow__row { display: flex; align-items: center; gap: 10px; }
+.flow__node {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+  padding: clamp(16px, 1.6vw, 22px) 8px;
+  border-radius: var(--r-md);
+  font-family: 'Drupadi', sans-serif;
+  font-size: clamp(.75rem, 1.05vw, 1.05rem);
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.86);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.14);
+  transition: transform var(--t-mid) var(--ease), background var(--t-mid) var(--ease), border-color var(--t-mid) var(--ease);
+}
+.flow__node--hi {
+  color: #fff;
+  background: linear-gradient(150deg, rgba(11,98,255,.85), rgba(10,69,184,.55));
+  border-color: rgba(120,175,255,.60);
+  box-shadow: 0 16px 44px -16px rgba(11,98,255,.85), inset 0 1px 0 rgba(255,255,255,.35);
+  position: relative;
+}
+/* o brilho pulsa numa camada propria: anima so opacidade, custo zero */
+.flow__node--hi::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  box-shadow: 0 0 40px 6px rgba(11,98,255,.75);
+  animation: pulseNode 3.4s var(--ease) infinite;
+  pointer-events: none;
+}
+@keyframes pulseNode {
+  0%, 100% { opacity: .35; }
+  50%      { opacity: 1; }
+}
+.flow:hover .flow__node { transform: translateY(-3px); }
+
+.flow__link {
+  position: relative;
+  --run: clamp(18px, 3vw, 48px);
+  flex: 0 0 var(--run);
+  height: 1px;
+  background: rgba(255,255,255,.20);
+  overflow: visible;
+}
+/* anima transform, nao 'left': o navegador nao precisa recalcular layout */
+.flow__link::after {
+  content: '';
+  position: absolute;
+  top: -2px; left: 0;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  box-shadow: 0 0 10px 2px rgba(77,155,255,.9);
+  animation: travel 2.6s var(--ease) infinite;
+}
+.flow__link:nth-of-type(2)::after { animation-delay: .3s; }
+.flow__link:nth-of-type(3)::after { animation-delay: .6s; }
+.flow__link:nth-of-type(4)::after { animation-delay: .9s; }
+@keyframes travel {
+  0%   { transform: translateX(0);              opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(var(--run, 48px)); opacity: 0; }
+}
+
+.flow__cap {
+  margin-top: 4px;
+  text-align: center;
+  font-size: .72rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+@media (max-width: 560px) {
+  .flow__row { flex-direction: column; }
+  .flow__node { width: 100%; }
+  .flow__link { flex: 0 0 26px; width: 1px; height: 26px; }
+  .flow__link::after { left: -2px; top: 0; animation-name: travelY; }
+  @keyframes travelY {
+    0%   { transform: translateY(0);    opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(26px); opacity: 0; }
+  }
+}
+
+/* ----------------------------------------------------- 04. SERVICOS ----- */
+/* Tres colunas em tela cheia viravam cartoes enormes. Com a grade mais
+   densa cabe a linha inteira de servicos sem rolar peca por peca. */
+.svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 1vw, 15px); }
+@media (max-width: 980px) { .svc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .svc-grid { grid-template-columns: 1fr; } }
+
+.svc-cta {
+  margin-top: clamp(34px, 4vw, 56px);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------ 05. COMO FUNCIONA ----- */
+.steps { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(16px, 2vw, 28px); }
+.steps__rail {
+  position: absolute;
+  top: 23px; /* meio do .step__dot (46px) */
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: rgba(255,255,255,.12);
+  z-index: 0;
+}
+.steps__rail i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--blue-soft), var(--cyan));
+  box-shadow: 0 0 14px rgba(11,98,255,.8);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 1.8s var(--ease-out) .25s;
+}
+.steps.is-in .steps__rail i { transform: scaleX(1); }
+
+.step { position: relative; z-index: 1; }
+.step__dot {
+  display: grid;
+  place-items: center;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  margin-bottom: 18px;
+  font-family: 'Drupadi', sans-serif;
+  font-size: 1.05rem;
+  color: #fff;
+  background: linear-gradient(150deg, rgba(11,98,255,.55), rgba(0,0,0,.85));
+  border: 1px solid rgba(120,175,255,.45);
+  box-shadow: 0 12px 34px -14px rgba(11,98,255,.9), inset 0 1px 0 rgba(255,255,255,.28);
+  transition: transform var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease);
+}
+.step:hover .step__dot {
+  transform: translateY(-5px) scale(1.06);
+  box-shadow: 0 20px 46px -14px rgba(11,98,255,1), inset 0 1px 0 rgba(255,255,255,.4);
+}
+.step h3 { margin-bottom: 8px; }
+.step p { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .steps { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  .steps__rail { display: none; }
+}
+@media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+
+/* ----------------------------------------------------- 06. WHITE LABEL -- */
+/* Alinhada a esquerda como todas as outras: centralizar quebrava o eixo de
+   leitura da pagina bem no meio dela. Com o texto a esquerda, o feixe de
+   luz do fundo acompanha, senao ele iluminava um centro agora vazio. */
+#white-label .fx-shaft--center::before {
+  background:
+    linear-gradient(90deg, transparent 2%, rgba(11,98,255,.20) 30%, transparent 64%),
+    radial-gradient(42% 48% at 32% 50%, rgba(11,98,255,.32), transparent 72%);
+}
+.wl-wrap { text-align: left; }
+.wl-head { margin-inline: 0; }
+.wl-head .lead { margin-inline: 0; }
+
+.wl-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(10px, 1vw, 15px);
+  text-align: left;
+}
+@media (max-width: 1100px) { .wl-cards { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 720px)  { .wl-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 420px)  { .wl-cards { grid-template-columns: 1fr; } }
+
+.wl-card {
+  padding: clamp(15px, 1.6vw, 21px);
+  border-radius: var(--r-md);
+  background: linear-gradient(158deg, rgba(255,255,255,.085), rgba(255,255,255,.02) 60%, rgba(255,255,255,.045));
+  border: 1px solid var(--stroke);
+  box-shadow: var(--shadow-glass);
+  transition: transform var(--t-mid) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.wl-card:hover { transform: translateY(-5px); border-color: rgba(87,230,196,.42); }
+.wl-card__ico {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  margin-bottom: 13px;
+  color: var(--cyan);
+  background: linear-gradient(150deg, rgba(87,230,196,.20), rgba(87,230,196,.05));
+  border: 1px solid rgba(87,230,196,.3);
+}
+.wl-card__ico svg { width: 15px; height: 15px; }
+.wl-card h3 {
+  margin-bottom: 6px;
+  font-size: clamp(.86rem, .95vw, 1rem);
+  /* Drupadi e larga e "Relacionamento" nao tem onde quebrar:
+     a separacao silabica do pt-BR resolve sem cortar no meio. */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+}
+.wl-card p { font-size: .84rem; line-height: 1.55; color: var(--muted); }
+
+.wl-close {
+  margin-top: clamp(24px, 2.8vw, 40px);
+  padding: clamp(24px, 2.8vw, 38px) clamp(24px, 3vw, 44px);
+  border-radius: var(--r-xl);
+  display: grid;
+  justify-items: start;
+  text-align: left;
+  gap: 12px;
+}
+.wl-close__ico {
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  color: var(--blue-soft);
+  background: rgba(11,98,255,.14);
+  border: 1px dashed rgba(120,175,255,.45);
+}
+.wl-close__ico svg { width: 20px; height: 20px; }
+.wl-close h3 { font-size: clamp(1.25rem, 2.2vw, 1.95rem); }
+.wl-close p { font-size: .92rem; color: var(--muted); }
+
+/* ---------------------------------------------------- 07. DIFERENCIAL --- */
+/* Fundo igual ao das outras secoes com foto (a dor, como funciona, contato):
+   mesma opacidade e mesma vinheta. O que pesava aqui era o tom violeta, nao
+   a foto; sem ele a secao entra no mesmo tom do resto da pagina. */
+.diff-quote {
+  font-family: 'Drupadi', sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  line-height: .96;
+  color: #fff;
+  max-width: 18ch;
+}
+.diff-list { display: grid; gap: 8px; margin-top: 34px; }
+.diff-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-radius: var(--r-md);
+  font-size: .98rem;
+  color: rgba(255,255,255,.62);
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.09);
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.diff-list li:hover { color: rgba(255,255,255,.92); border-color: rgba(255,255,255,.20); }
+.diff-list svg { width: 16px; height: 16px; color: rgba(255,255,255,.30); flex: none; }
+.diff-pay {
+  margin-top: 22px;
+  padding: 22px 26px;
+  border-radius: var(--r-lg);
+  font-size: clamp(1.05rem, 1.7vw, 1.45rem);
+  font-weight: 500;
+  color: #fff;
+}
+
+/* ------------------------------------------------------ 08. PORTFOLIO --- */
+.folio-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 34px; }
+.folio-tabs button {
+  padding: 11px 22px;
+  border-radius: var(--r-pill);
+  font-size: .88rem;
+  color: rgba(255,255,255,.62);
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(255,255,255,.12);
+  cursor: pointer;
+  transition: all var(--t-fast) var(--ease);
+}
+.folio-tabs button:hover { color: #fff; border-color: rgba(255,255,255,.28); }
+.folio-tabs button.is-active {
+  color: #fff;
+  background: linear-gradient(120deg, var(--blue-hi), var(--blue) 60%, var(--blue-lo));
+  border-color: rgba(120,175,255,.55);
+  box-shadow: 0 12px 32px -12px rgba(11,98,255,.85);
+}
+
+/* Grade bento: quatro colunas, blocos 2x2 e 1x1. A altura da linha vale 9/16
+   da coluna, entao os dois formatos saem em 16:9 e nenhum board e recortado.
+   Faixa 2x1 nao entra de proposito: em 3,6:1 ela cortava metade da peca.
+   Tres blocos grandes + quatro pequenos fecham 4x4 sem buraco:
+     [ 2x2 ][ 2x2 ]
+     [ 2x2 ][1x1|1x1]
+            [1x1|1x1]                                                       */
+.folio-grid {
+  --fg-cols: 4;
+  --fg-gap: clamp(10px, 1vw, 16px);
+  display: grid;
+  grid-template-columns: repeat(var(--fg-cols), 1fr);
+  grid-auto-flow: row dense;
+  gap: var(--fg-gap);
+  /* reserva, caso o calc abaixo nao seja entendido */
+  grid-auto-rows: clamp(96px, 9.3vw, 160px);
+  grid-auto-rows: calc(
+    (min(var(--maxw), 100vw) - 2 * var(--pad-x)
+      - (var(--fg-cols) - 1) * var(--fg-gap)) / var(--fg-cols) * 9 / 16);
+}
+.folio {
+  display: block;
+  position: relative;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  background: #05070d;
+  box-shadow: var(--shadow-glass);
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.folio--xl { grid-column: span 2; grid-row: span 2; }
+
+/* o bloco grande carrega o titulo maior, senao a legenda some no tamanho */
+.folio--xl .folio__meta h3 { font-size: clamp(1.1rem, 1.6vw, 1.55rem); }
+
+@media (max-width: 1080px) {
+  .folio-grid { --fg-cols: 2; }
+}
+.folio.is-hidden { display: none; }
+.folio.is-pop { animation: folioIn .55s var(--ease-out) var(--d, 0s) both; }
+.folio:hover,
+.folio:focus-visible {
+  border-color: rgba(77,155,255,.45);
+  box-shadow: 0 30px 70px -28px rgba(0,0,0,.95);
+}
+
+@keyframes folioIn {
+  from { opacity: 0; transform: scale(.96) translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.folio__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.005);
+  transition: transform .8s var(--ease);
+}
+.folio:hover .folio__img,
+.folio:focus-visible .folio__img { transform: scale(1.05); }
+
+
+.folio__veil {
+  position: absolute;
+  inset: 0;
+  /* Alguns boards sao claros: o rotulo precisa de base escura de verdade
+     para o texto branco continuar legivel em cima de qualquer um deles. */
+  background: linear-gradient(180deg,
+    rgba(0,0,0,.10) 0%,
+    rgba(0,0,0,.22) 30%,
+    rgba(0,0,0,.62) 56%,
+    rgba(0,0,0,.90) 80%,
+    rgba(0,0,0,.98) 100%);
+  transition: opacity var(--t-mid) var(--ease);
+}
+.folio__meta {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: clamp(18px, 2vw, 26px);
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.folio__cat {
+  padding: 5px 13px;
+  border-radius: var(--r-pill);
+  font-size: .66rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(10,14,24,.7);
+  border: 1px solid rgba(255,255,255,.26);
+}
+.folio__meta h3 {
+  font-size: clamp(.92rem, 1.12vw, 1.14rem);
+  text-shadow: 0 2px 14px rgba(0,0,0,.8);
+}
+.folio__meta p {
+  font-size: .8rem;
+  color: rgba(255,255,255,.62);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--t-mid) var(--ease), transform var(--t-mid) var(--ease);
+}
+.folio:hover .folio__meta p { opacity: 1; transform: none; }
+
+/* Faixa panoramica e bloco 1x1 nao tem altura para titulo e descricao: a
+   descricao sai do fluxo e o titulo desce para onde a vinheta e mais densa. */
+@media (min-width: 701px) {
+  .folio:not(.folio--xl) .folio__meta p { display: none; }
+  .folio:not(.folio--xl) .folio__meta { padding: 14px 18px 16px; gap: 6px; }
+}
+
+/* No celular o board fica pequeno demais para segurar texto por cima:
+   a legenda sai da imagem e vai para baixo dela, sobre o preto. */
+@media (max-width: 700px) {
+  .folio-grid {
+    --fg-cols: 1;
+    grid-auto-rows: auto;
+  }
+  .folio--xl { grid-column: span 1; grid-row: span 1; }
+  .folio { aspect-ratio: auto; }
+  .folio__img { aspect-ratio: 16 / 9; height: auto; }
+  .folio:hover .folio__img { transform: scale(1.005); }
+  .folio__veil { display: none; }
+  .folio__meta {
+    position: static;
+    padding: 14px 16px 18px;
+    gap: 8px;
+  }
+  .folio__meta h3 { text-shadow: none; }
+  .folio__meta p { opacity: 1; transform: none; }
+}
+
+
+
+/* ---------------------------------------------------- 09. PARA QUEM E --- */
+.who-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 820px) { .who-list { grid-template-columns: 1fr; } }
+.who-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 22px;
+  border-radius: var(--r-md);
+  background: linear-gradient(120deg, rgba(255,255,255,.06), rgba(255,255,255,.018));
+  border: 1px solid rgba(255,255,255,.11);
+  font-size: .96rem;
+  color: rgba(255,255,255,.82);
+  transition: transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.who-list li:hover {
+  transform: translateY(-4px);
+  border-color: rgba(77,155,255,.45);
+  background: linear-gradient(120deg, rgba(11,98,255,.16), rgba(255,255,255,.02));
+}
+.who-list svg { width: 18px; height: 18px; color: var(--blue-soft); flex: none; margin-top: 4px; }
+
+.who-close {
+  margin-top: clamp(24px, 2.8vw, 40px);
+  padding: clamp(24px, 2.8vw, 38px);
+  border-radius: var(--r-xl);
+  text-align: center;
+}
+.who-close h3 { font-size: clamp(1.25rem, 2.2vw, 1.95rem); }
+
+/* ------------------------------------------------------ 10. CTA FINAL --- */
+.cta-grid {
+  display: grid;
+  grid-template-columns: 1fr .92fr;
+  gap: clamp(34px, 5vw, 76px);
+  align-items: center;
+}
+.cta-grid > * { min-width: 0; }
+@media (max-width: 900px) { .cta-grid { grid-template-columns: 1fr; } }
+
+.cta-card {
+  padding: clamp(28px, 3.4vw, 44px);
+  border-radius: var(--r-xl);
+  display: grid;
+  gap: 20px;
+  justify-items: start;
+}
+.cta-card__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 16px 8px 12px;
+  border-radius: var(--r-pill);
+  font-size: .76rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #eafff2;
+  background: linear-gradient(120deg, rgba(47,208,106,.26), rgba(18,169,79,.10));
+  border: 1px solid rgba(47,208,106,.42);
+}
+.cta-card__tag svg { width: 16px; height: 16px; color: #4ee08a; }
+
+.cta-card h3 { font-size: clamp(1.15rem, 1.8vw, 1.55rem); max-width: 22ch; }
+
+.cta-card__list { display: grid; gap: 11px; width: 100%; }
+.cta-card__list li {
+  position: relative;
+  padding-left: 26px;
+  font-size: .95rem;
+  color: var(--muted);
+}
+.cta-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: .62em;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  box-shadow: 0 0 10px 1px rgba(77,155,255,.7);
+}
+
+.cta-card .btn { width: 100%; justify-content: space-between; }
+.cta-card__note { font-size: .82rem; line-height: 1.55; color: var(--faint); }
+
+/* --------------------------------------------------------- FOOTER ------- */
+.footer {
+  position: relative;
+  padding: clamp(56px, 6.5vw, 96px) 0 30px;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.6fr .8fr .8fr 1.1fr;
+  gap: clamp(28px, 4vw, 64px);
+  padding-bottom: clamp(36px, 4vw, 56px);
+}
+
+.footer__brand p {
+  margin-top: 18px;
+  max-width: 34ch;
+  font-size: .92rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.footer__brand .social { margin-top: 24px; gap: 10px; }
+.footer__brand .social a {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.13);
+  color: rgba(255,255,255,.78);
+}
+.footer__brand .social a:hover {
+  color: #fff;
+  border-color: rgba(77,155,255,.55);
+  background: rgba(11,98,255,.16);
+}
+
+.footer__col { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.footer__col h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--blue-soft);
+  margin-bottom: 6px;
+}
+.footer__col a {
+  font-size: .93rem;
+  color: var(--muted);
+  transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.footer__col a:hover { color: #fff; transform: translateX(3px); }
+
+.footer__cta .btn--ghost { padding: 13px 24px; font-size: .95rem; }
+.footer__cta .btn--ghost:hover { transform: none; }
+.footer__cta span {
+  font-size: .82rem;
+  line-height: 1.55;
+  color: var(--faint);
+  max-width: 30ch;
+}
+
+.footer__bottom {
+  padding-top: 26px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  font-size: .78rem;
+  color: var(--faint);
+}
+
+@media (max-width: 900px) {
+  .footer__grid { grid-template-columns: 1fr 1fr; gap: 34px; }
+  .footer__brand { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) {
+  .footer__grid { grid-template-columns: 1fr; }
+  /* espaco para o botao flutuante do WhatsApp nao cobrir o texto */
+  .footer { padding-bottom: 88px; }
+  .footer__bottom { flex-direction: column; gap: 8px; padding-right: 68px; }
+}
+
+/* WhatsApp flutuante */
+.wa-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 190;
+  display: grid;
+  place-items: center;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(150deg, #2fd06a, #12a94f);
+  box-shadow: 0 16px 40px -12px rgba(18,169,79,.85), inset 0 1px 0 rgba(255,255,255,.35);
+  transition: transform var(--t-fast) var(--ease);
+}
+.wa-float:hover { transform: translateY(-4px) scale(1.05); }
+.wa-float svg { width: 27px; height: 27px; }
+@media (max-width: 560px) { .wa-float { width: 50px; height: 50px; right: 14px; bottom: 14px; } }
+</style>
+</head>
+
+<body>
+
+<!-- grao de filme: uma camada fixa para a pagina toda -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- barra de progresso do scroll -->
+<div class="progress" data-progress aria-hidden="true"></div>
+
+<!-- ====================================================== HEADER ======== -->
+<header class="header" data-header>
+  <div class="header__scrim" aria-hidden="true"></div>
+  <div class="header__bar">
+    <a href="#home" aria-label="Studio Trace, ir para o topo">
+      <img class="logo" src="{{ url_for('static', filename='image/logo.webp') }}" alt="Studio Trace" width="520" height="319">
+    </a>
+
+    <nav class="nav" data-nav-menu aria-label="Navegação principal">
+      <a href="#home" data-spy class="is-active"><span>Home</span></a>
+      <a href="#servicos" data-spy><span>Serviços</span></a>
+      <a href="#como-funciona" data-spy><span>Como funciona</span></a>
+      <a href="#portfolio" data-spy><span>Portfólio</span></a>
+      <a href="#contato" data-spy><span>Contato</span></a>
+    </nav>
+
+    <div class="social" aria-label="Redes do Studio Trace">
+      <a href="{{ whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp" data-cta="header-whatsapp" data-keep-utm>
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.24 8.24 0 0 1 0 16.48m4.52-6.17c-.25-.12-1.47-.72-1.69-.81s-.39-.12-.56.13-.64.8-.79.97-.29.19-.54.06a6.7 6.7 0 0 1-1.98-1.22 7.4 7.4 0 0 1-1.37-1.7c-.14-.25-.01-.38.11-.5s.25-.29.37-.44.17-.25.25-.42a.46.46 0 0 0-.02-.44c-.06-.13-.56-1.35-.77-1.84s-.4-.43-.56-.43l-.47-.01a.9.9 0 0 0-.66.31 2.77 2.77 0 0 0-.87 2.06 4.8 4.8 0 0 0 1.01 2.56c.12.16 1.75 2.67 4.23 3.74a14 14 0 0 0 1.41.52 3.4 3.4 0 0 0 1.56.1c.48-.07 1.47-.6 1.68-1.18s.21-1.08.14-1.18-.22-.16-.47-.28"/></svg>
+      </a>
+      <a href="{{ instagram }}" target="_blank" rel="noopener" aria-label="Instagram" data-cta="header-instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="{{ behance }}" target="_blank" rel="noopener" aria-label="Behance" data-cta="header-behance">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.1 5.5c1.9 0 3.3.7 3.3 2.6 0 1.1-.6 1.8-1.5 2.2 1.3.4 2 1.4 2 2.8 0 2.3-1.9 3.4-4 3.4H2V5.5zm-.4 4.4c.9 0 1.5-.4 1.5-1.3s-.6-1.2-1.5-1.2H4.7v2.5zm.2 4.7c1 0 1.8-.4 1.8-1.5s-.7-1.5-1.8-1.5H4.7v3zM18.2 8c2.4 0 4 1.7 4 4.3v.7h-5.7c.1 1.2.9 1.9 2 1.9.8 0 1.4-.3 1.7-.9h1.9c-.4 1.6-1.8 2.6-3.6 2.6-2.5 0-4.1-1.7-4.1-4.3S15.8 8 18.2 8m-1.7 3.5h3.6c-.1-1.1-.8-1.8-1.8-1.8s-1.7.7-1.8 1.8M15.4 5.7h5.1v1.4h-5.1z"/></svg>
+      </a>
+    </div>
+
+    <button class="burger" data-nav-toggle aria-label="Abrir menu" aria-expanded="false" type="button">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ================================================ 01. HERO =========== -->
+<section class="hero" id="home">
+  <picture class="hero__media">
+    <source media="(max-width: 860px)" srcset="{{ url_for('static', filename='image/banner-mobile.webp') }}">
+    <img src="{{ url_for('static', filename='image/banner-pc.webp') }}" alt="" fetchpriority="high" decoding="async" width="1920" height="1080">
+  </picture>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="hero__inner">
+    <div class="hero__copy">
+      <h1 class="reveal-lines">
+        <span><i>Sua agência não</i></span><br>
+        <span><i>precisa de mais um</i></span><br>
+        <span><i>designer. Precisa</i></span><br>
+        <span><i>de mais capacidade.</i></span>
+      </h1>
+
+      <p class="lead" data-reveal style="--d:.5s">
+        Design sob demanda para agências de marketing que precisam entregar mais,
+        sem aumentar a equipe interna.
+      </p>
+
+      <div class="hero__actions" data-reveal style="--d:.65s">
+        <a class="btn btn--lg" href="#contato" data-cta="hero-principal">
+          <span class="btn__label">Quero conhecer o Trace</span>
+          <span class="btn__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- badges ancorados na hero inteira, no terco de baixo do banner -->
+  <div class="hero__chips" aria-hidden="true">
+    <span class="chip">Feito para agências</span>
+    <span class="chip">Sob demanda</span>
+    <span class="chip">White label</span>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <i></i>
+    <span>Role</span>
+  </div>
+</section>
+
+<!-- ================================================ 02. A DOR ========== -->
+<section class="section" data-sec id="dor">
+  <!-- a foto da identidade, recorte da direita -->
+  <div class="fx fx-photo fx-photo--right scroll-drift"></div>
+  <div class="fx fx-veil"></div>
+
+  <div class="wrap">
+    <header class="sec-head scroll-par">
+      <span class="eyebrow" data-reveal>O ponto de saturação</span>
+      <h2 data-reveal="mask" style="--d:.08s">Sua agência cresce.<br>A demanda também.</h2>
+      <p class="lead" data-reveal style="--d:.16s">
+        Mais clientes significam mais campanhas, mais posts, mais apresentações e mais
+        alterações. E chega uma hora em que:
+      </p>
+    </header>
+
+    <div class="pain-grid" data-stagger="0.08">
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">01</span>
+        <p>A equipe interna fica sobrecarregada.</p>
+      </article>
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">02</span>
+        <p>Você precisa recusar demandas por falta de braço.</p>
+      </article>
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">03</span>
+        <p>Contratar um designer fixo nem sempre faz sentido.</p>
+      </article>
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">04</span>
+        <p>Freelancers diferentes geram resultados inconsistentes.</p>
+      </article>
+      <article class="card pain-card" data-reveal="tilt">
+        <span class="card__num">05</span>
+        <p>O time estratégico acaba gastando tempo em trabalho operacional.</p>
+      </article>
+    </div>
+
+    <div class="glass edge-lit statement" data-reveal="zoom">
+      <h3>É aí que o <span class="grad-blue">Trace</span> entra.</h3>
+      <a class="link-arrow" href="#solucao">
+        Ver como funciona
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ 03. SOLUCAO ======== -->
+<section class="section" data-sec id="solucao">
+  <!-- sem foto aqui: so um campo de luz difuso -->
+  <div class="fx fx-aurora scroll-drift"></div>
+  <div class="fx fx-veil--center"></div>
+
+  <div class="wrap">
+    <div class="solution-grid">
+      <div>
+        <span class="eyebrow" data-reveal>A solução</span>
+        <h2 data-reveal="mask" style="--d:.08s">Design sob demanda.<br>Sem aumentar sua estrutura.</h2>
+        <p class="lead" data-reveal style="--d:.16s">
+          O Trace funciona como uma extensão do seu time. Sem burocracia, sem vínculo
+          empregatício e sem precisar montar uma equipe maior.
+        </p>
+      </div>
+
+      <ul class="steps-inline" data-stagger="0.1">
+        <li data-reveal="right"><b>01</b> Você envia o briefing.</li>
+        <li data-reveal="right"><b>02</b> Nós cuidamos do design.</li>
+        <li data-reveal="right"><b>03</b> Sua agência entrega para o cliente.</li>
+      </ul>
+    </div>
+
+    <div class="glass glass--blur edge-lit flow" data-reveal="zoom">
+      <div class="flow__row">
+        <div class="flow__node">Agência</div>
+        <span class="flow__link" aria-hidden="true"></span>
+        <div class="flow__node">Briefing</div>
+        <span class="flow__link" aria-hidden="true"></span>
+        <div class="flow__node flow__node--hi">Trace</div>
+        <span class="flow__link" aria-hidden="true"></span>
+        <div class="flow__node">Design</div>
+        <span class="flow__link" aria-hidden="true"></span>
+        <div class="flow__node">Cliente</div>
+      </div>
+      <p class="flow__cap">O fluxo inteiro, sem ruído</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ 04. SERVICOS ======= -->
+<section class="section" data-sec id="servicos">
+  <!-- malha tecnica com halo no alto -->
+  <div class="fx fx-mesh"></div>
+  <div class="fx fx-spot fx-spot--tr scroll-drift"></div>
+
+  <div class="wrap">
+    <header class="sec-head scroll-par">
+      <span class="eyebrow" data-reveal>Serviços</span>
+      <h2 data-reveal="mask" style="--d:.08s">O que podemos assumir<br>da sua operação</h2>
+    </header>
+
+    <div class="svc-grid" data-stagger="0.07">
+      <article class="card" data-reveal="tilt">
+        <span class="card__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.8-.9L3 21l1.9-4.6A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
+        </span>
+        <h3>Social Media</h3>
+        <p>Posts, carrosséis, campanhas e peças para redes sociais.</p>
+      </article>
+
+      <article class="card" data-reveal="tilt">
+        <span class="card__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.6 21.4 12 12 21.4 2.6 12z"/><path d="M12 7.6 16.4 12 12 16.4 7.6 12z"/></svg>
+        </span>
+        <h3>Identidade Visual</h3>
+        <p>Marcas, sistemas visuais e materiais de branding.</p>
+      </article>
+
+      <article class="card" data-reveal="tilt">
+        <span class="card__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17.5 8.5a5 5 0 0 1 0 7"/><path d="M20 6a8.5 8.5 0 0 1 0 12"/></svg>
+        </span>
+        <h3>Campanhas</h3>
+        <p>Conceito visual, key visuals e todos os desdobramentos.</p>
+      </article>
+
+      <article class="card" data-reveal="tilt">
+        <span class="card__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5.5-5.5 3.5 3.5L21 6"/><path d="M15 6h6v6"/></svg>
+        </span>
+        <h3>Performance</h3>
+        <p>Criativos para anúncios, landing pages e campanhas de aquisição.</p>
+      </article>
+
+      <article class="card" data-reveal="tilt">
+        <span class="card__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+        </span>
+        <h3>Materiais Comerciais</h3>
+        <p>Apresentações, propostas, catálogos e materiais institucionais.</p>
+      </article>
+
+      <article class="card" data-reveal="tilt">
+        <span class="card__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.1 5.4L19.5 10l-5.4 2.1L12 17.5 9.9 12.1 4.5 10l5.4-1.6z"/><path d="M18.5 16.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
+        </span>
+        <h3>Demandas Especiais</h3>
+        <p>Peças que precisam sair do padrão e ganhar um tratamento mais elaborado.</p>
+      </article>
+    </div>
+
+    <div class="svc-cta" data-reveal>
+      <a class="btn" href="#contato" data-cta="servicos">
+        <span class="btn__label">Quero terceirizar meu design</span>
+        <span class="btn__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 05. COMO FUNCIONA ====== -->
+<section class="section" data-sec id="como-funciona">
+  <!-- mesma foto, recorte da esquerda -->
+  <div class="fx fx-photo fx-photo--left scroll-drift"></div>
+  <div class="fx fx-veil"></div>
+
+  <div class="wrap">
+    <header class="sec-head scroll-par">
+      <span class="eyebrow" data-reveal>Como funciona</span>
+      <h2 data-reveal="mask" style="--d:.08s">Você manda.<br>A gente resolve.</h2>
+    </header>
+
+    <div class="steps" data-reveal="mask" data-stagger="0.1">
+      <div class="steps__rail" aria-hidden="true"><i></i></div>
+
+      <article class="step" data-reveal>
+        <span class="step__dot">01</span>
+        <h3>Envie o briefing</h3>
+        <p>Sua equipe envia a demanda e todas as informações necessárias.</p>
+      </article>
+      <article class="step" data-reveal>
+        <span class="step__dot">02</span>
+        <h3>O Trace produz</h3>
+        <p>Nosso time transforma o briefing em uma solução visual alinhada à estratégia.</p>
+      </article>
+      <article class="step" data-reveal>
+        <span class="step__dot">03</span>
+        <h3>Você revisa</h3>
+        <p>Receba, avalie e solicite ajustes quando necessário.</p>
+      </article>
+      <article class="step" data-reveal>
+        <span class="step__dot">04</span>
+        <h3>Sua agência entrega</h3>
+        <p>O projeto volta para sua operação pronto para chegar ao cliente.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== 06. WHITE LABEL ====== -->
+<section class="section" data-sec id="white-label">
+  <!-- feixe vertical: a luz desce pela coluna das camadas -->
+  <div class="fx fx-shaft fx-shaft--center scroll-drift"></div>
+
+  <div class="wrap wl-wrap">
+    <header class="sec-head wl-head scroll-par">
+      <span class="eyebrow" data-reveal>White label</span>
+      <h2 data-reveal="mask" style="--d:.08s">Seu cliente não precisa<br>saber que o Trace existe.</h2>
+      <p class="lead" data-reveal style="--d:.16s">
+        Trabalhamos white label para que o design seja entregue como parte da sua
+        própria operação. Sua agência mantém tudo que importa:
+      </p>
+    </header>
+
+    <ul class="wl-cards" data-stagger="0.07">
+      <li class="wl-card" data-reveal="zoom">
+        <span class="wl-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+        <h3>Relacionamento</h3>
+        <p>A conversa com o cliente segue sendo sua.</p>
+      </li>
+      <li class="wl-card" data-reveal="zoom">
+        <span class="wl-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+        <h3>Estratégia</h3>
+        <p>O plano continua saindo da sua cabeça.</p>
+      </li>
+      <li class="wl-card" data-reveal="zoom">
+        <span class="wl-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+        <h3>Comunicação</h3>
+        <p>Nenhum contato passa por fora da agência.</p>
+      </li>
+      <li class="wl-card" data-reveal="zoom">
+        <span class="wl-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+        <h3>Gestão</h3>
+        <p>Prazo, escopo e prioridade quem define é você.</p>
+      </li>
+      <li class="wl-card" data-reveal="zoom">
+        <span class="wl-card__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+        <h3>Crédito</h3>
+        <p>A entrega chega assinada pela sua marca.</p>
+      </li>
+    </ul>
+
+    <div class="glass edge-lit wl-close" data-reveal="zoom">
+      <span class="wl-close__ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 12S6.4 5.5 12 5.5 21.4 12 21.4 12 17.6 18.5 12 18.5 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.8"/><path d="M4 20 20 4"/></svg>
+      </span>
+      <h3>O Trace fica nos <span class="grad-blue">bastidores</span>.</h3>
+      <p>Ninguém do outro lado precisa saber que existimos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== 07. DIFERENCIAL ====== -->
+<section class="section" data-sec id="diferencial">
+  <!-- foto pelo rodape, mesmo tratamento das demais secoes -->
+  <div class="fx fx-photo fx-photo--bottom scroll-drift"></div>
+  <div class="fx fx-veil"></div>
+
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>O ponto</span>
+    <h2 class="diff-quote" data-reveal="mask" style="--d:.08s; margin-top:20px">
+      Não somos uma agência. E esse é o ponto.
+    </h2>
+    <p class="lead" data-reveal style="--d:.16s; margin-top:26px">
+      O Trace existe para fazer aquilo que muitas agências não conseguem escalar
+      internamente: design.
+    </p>
+
+    <ul class="diff-list" data-stagger="0.08">
+      <li data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg> Você não precisa terceirizar sua estratégia.</li>
+      <li data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg> Não precisa entregar seu cliente.</li>
+      <li data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg> Não precisa aumentar sua estrutura.</li>
+    </ul>
+
+    <div class="glass glass--blue edge-lit diff-pay" data-reveal="zoom">
+      Você só ganha <span class="txt-white">mais capacidade de produção</span>.
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ 08. PORTFOLIO ====== -->
+<section class="section" data-sec id="portfolio">
+  <!-- preto puro: aqui quem tem que brilhar e o trabalho -->
+
+  <div class="wrap">
+    <header class="sec-head scroll-par">
+      <span class="eyebrow" data-reveal>Portfólio</span>
+      <h2 data-reveal="mask" style="--d:.08s">Design que fala por você.</h2>
+      <p class="lead" data-reveal style="--d:.16s">
+        Uma amostra do que sai da nossa operação, organizada por frente de trabalho.
+      </p>
+    </header>
+
+    <div class="folio-tabs" data-reveal role="group" aria-label="Filtrar portfólio">
+      <button type="button" data-filter="all" class="is-active" aria-pressed="true">Todos</button>
+      <button type="button" data-filter="branding" aria-pressed="false">Branding</button>
+      <button type="button" data-filter="social" aria-pressed="false">Social</button>
+      <button type="button" data-filter="campanhas" aria-pressed="false">Campanhas</button>
+      <button type="button" data-filter="performance" aria-pressed="false">Performance</button>
+      <button type="button" data-filter="editorial" aria-pressed="false">Editorial</button>
+    </div>
+
+    <!-- Cada board leva para o perfil do Behance. O <a> e o proprio tile,
+         entao o alvo de clique e a peca inteira, nao um link escondido. -->
+    <div class="folio-grid" data-stagger="0.05">
+      <a class="folio folio--xl" data-cat="branding" data-reveal="zoom"
+         href="{{ behance }}" target="_blank" rel="noopener"
+         data-cta="portfolio-sistema-visual-completo"
+         aria-label="Sistema visual completo — ver o portfólio no Behance">
+        <img class="folio__img"
+             src="{{ url_for('static', filename='image/portfolio/sistema-visual-completo.webp') }}"
+             srcset="{{ url_for('static', filename='image/portfolio/sistema-visual-completo-sm.webp') }} 900w,
+                     {{ url_for('static', filename='image/portfolio/sistema-visual-completo.webp') }} 1800w"
+             sizes="(max-width: 700px) 100vw, (max-width: 1080px) 92vw, 46vw"
+             alt="Sistema visual completo, projeto do Studio Trace" loading="lazy" decoding="async" width="1200" height="675" fetchpriority="high">
+        <div class="folio__veil"></div>
+        <div class="folio__meta">
+          <span class="folio__cat">Branding</span>
+          <h3>Sistema visual completo</h3>
+          <p>Marca, paleta, tipografia e todas as aplicações.</p>
+        </div>
+      </a>
+
+      <a class="folio folio--xl" data-cat="social" data-reveal="zoom"
+         href="{{ behance }}" target="_blank" rel="noopener"
+         data-cta="portfolio-linha-editorial-completa"
+         aria-label="Linha editorial completa — ver o portfólio no Behance">
+        <img class="folio__img"
+             src="{{ url_for('static', filename='image/portfolio/linha-editorial-completa.webp') }}"
+             srcset="{{ url_for('static', filename='image/portfolio/linha-editorial-completa-sm.webp') }} 900w,
+                     {{ url_for('static', filename='image/portfolio/linha-editorial-completa.webp') }} 1200w"
+             sizes="(max-width: 700px) 100vw, (max-width: 1080px) 92vw, 46vw"
+             alt="Linha editorial completa, projeto do Studio Trace" loading="lazy" decoding="async" width="1200" height="675">
+        <div class="folio__veil"></div>
+        <div class="folio__meta">
+          <span class="folio__cat">Social</span>
+          <h3>Linha editorial completa</h3>
+          <p>Grade de conteúdo e peças para o feed do cliente.</p>
+        </div>
+      </a>
+
+      <a class="folio folio--xl" data-cat="performance" data-reveal="zoom"
+         href="{{ behance }}" target="_blank" rel="noopener"
+         data-cta="portfolio-pacote-de-criativos"
+         aria-label="Pacote de criativos — ver o portfólio no Behance">
+        <img class="folio__img"
+             src="{{ url_for('static', filename='image/portfolio/pacote-de-criativos.webp') }}"
+             srcset="{{ url_for('static', filename='image/portfolio/pacote-de-criativos-sm.webp') }} 900w,
+                     {{ url_for('static', filename='image/portfolio/pacote-de-criativos.webp') }} 1200w"
+             sizes="(max-width: 700px) 100vw, (max-width: 1080px) 92vw, 46vw"
+             alt="Pacote de criativos, projeto do Studio Trace" loading="lazy" decoding="async" width="1200" height="675">
+        <div class="folio__veil"></div>
+        <div class="folio__meta">
+          <span class="folio__cat">Performance</span>
+          <h3>Pacote de criativos</h3>
+          <p>Variações para teste em mídia paga.</p>
+        </div>
+      </a>
+
+      <a class="folio" data-cat="campanhas" data-reveal="zoom"
+         href="{{ behance }}" target="_blank" rel="noopener"
+         data-cta="portfolio-key-visual-de-lancamento"
+         aria-label="Key visual de lançamento — ver o portfólio no Behance">
+        <img class="folio__img"
+             src="{{ url_for('static', filename='image/portfolio/key-visual-de-lancamento.webp') }}"
+             srcset="{{ url_for('static', filename='image/portfolio/key-visual-de-lancamento-sm.webp') }} 900w,
+                     {{ url_for('static', filename='image/portfolio/key-visual-de-lancamento.webp') }} 1200w"
+             sizes="(max-width: 700px) 100vw, (max-width: 1080px) 45vw, 23vw"
+             alt="Key visual de lançamento, projeto do Studio Trace" loading="lazy" decoding="async" width="1200" height="675">
+        <div class="folio__veil"></div>
+        <div class="folio__meta">
+          <span class="folio__cat">Campanhas</span>
+          <h3>Key visual de lançamento</h3>
+          <p>Conceito e desdobramentos para todos os canais.</p>
+        </div>
+      </a>
+
+      <a class="folio" data-cat="editorial" data-reveal="zoom"
+         href="{{ behance }}" target="_blank" rel="noopener"
+         data-cta="portfolio-apresentacao-comercial"
+         aria-label="Apresentação comercial — ver o portfólio no Behance">
+        <img class="folio__img"
+             src="{{ url_for('static', filename='image/portfolio/apresentacao-comercial.webp') }}"
+             srcset="{{ url_for('static', filename='image/portfolio/apresentacao-comercial-sm.webp') }} 900w,
+                     {{ url_for('static', filename='image/portfolio/apresentacao-comercial.webp') }} 1200w"
+             sizes="(max-width: 700px) 100vw, (max-width: 1080px) 45vw, 23vw"
+             alt="Apresentação comercial, projeto do Studio Trace" loading="lazy" decoding="async" width="1200" height="675">
+        <div class="folio__veil"></div>
+        <div class="folio__meta">
+          <span class="folio__cat">Editorial</span>
+          <h3>Apresentação comercial</h3>
+          <p>Material de venda pronto para a reunião.</p>
+        </div>
+      </a>
+
+      <a class="folio" data-cat="performance" data-reveal="zoom"
+         href="{{ behance }}" target="_blank" rel="noopener"
+         data-cta="portfolio-landing-page-de-captacao"
+         aria-label="Landing page de captação — ver o portfólio no Behance">
+        <img class="folio__img"
+             src="{{ url_for('static', filename='image/portfolio/landing-page-de-captacao.webp') }}"
+             srcset="{{ url_for('static', filename='image/portfolio/landing-page-de-captacao-sm.webp') }} 900w,
+                     {{ url_for('static', filename='image/portfolio/landing-page-de-captacao.webp') }} 1200w"
+             sizes="(max-width: 700px) 100vw, (max-width: 1080px) 45vw, 23vw"
+             alt="Landing page de captação, projeto do Studio Trace" loading="lazy" decoding="async" width="1200" height="675">
+        <div class="folio__veil"></div>
+        <div class="folio__meta">
+          <span class="folio__cat">Performance</span>
+          <h3>Landing page de captação</h3>
+          <p>Layout completo da página de conversão.</p>
+        </div>
+      </a>
+
+      <a class="folio" data-cat="campanhas" data-reveal="zoom"
+         href="{{ behance }}" target="_blank" rel="noopener"
+         data-cta="portfolio-campanha-sazonal"
+         aria-label="Campanha sazonal — ver o portfólio no Behance">
+        <img class="folio__img"
+             src="{{ url_for('static', filename='image/portfolio/campanha-sazonal.webp') }}"
+             srcset="{{ url_for('static', filename='image/portfolio/campanha-sazonal-sm.webp') }} 900w,
+                     {{ url_for('static', filename='image/portfolio/campanha-sazonal.webp') }} 1200w"
+             sizes="(max-width: 700px) 100vw, (max-width: 1080px) 45vw, 23vw"
+             alt="Campanha sazonal, projeto do Studio Trace" loading="lazy" decoding="async" width="1200" height="675">
+        <div class="folio__veil"></div>
+        <div class="folio__meta">
+          <span class="folio__cat">Campanhas</span>
+          <h3>Campanha sazonal</h3>
+          <p>Do conceito às peças de mídia.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== 09. PARA QUEM E ====== -->
+<section class="section" data-sec id="para-quem">
+  <!-- campo de luz, sem foto -->
+  <div class="fx fx-aurora scroll-drift"></div>
+
+  <div class="wrap">
+    <header class="sec-head scroll-par">
+      <span class="eyebrow" data-reveal>Para quem é</span>
+      <h2 data-reveal="mask" style="--d:.08s">O Trace foi feito<br>para agências que:</h2>
+    </header>
+
+    <ul class="who-list" data-stagger="0.08">
+      <li data-reveal="left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        Já possuem clientes, mas precisam de mais braço de design.
+      </li>
+      <li data-reveal="left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        Querem aumentar a capacidade de entrega sem contratar internamente.
+      </li>
+      <li data-reveal="left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        Precisam manter qualidade visual mesmo com alto volume de demandas.
+      </li>
+      <li data-reveal="left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        Querem um parceiro confiável para demandas recorrentes.
+      </li>
+    </ul>
+
+    <div class="glass edge-lit who-close" data-reveal="zoom">
+      <h3>Se sua agência precisa entregar mais,<br><span class="grad-blue">provavelmente podemos ajudar.</span></h3>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ 10. CTA FINAL ====== -->
+<section class="section" data-sec id="contato">
+  <!-- foto pelo topo, com tom mais frio -->
+  <div class="fx fx-photo fx-photo--top fx-photo--cool scroll-drift"></div>
+  <div class="fx fx-veil"></div>
+
+  <div class="wrap cta-grid">
+    <div>
+      <span class="eyebrow" data-reveal>Vamos conversar</span>
+      <h2 data-reveal="mask" style="--d:.08s; margin-top:20px">
+        Seu próximo designer pode ser uma <span class="grad-blue">operação inteira</span>.
+      </h2>
+      <p class="lead" data-reveal style="--d:.16s; margin-top:24px">
+        Conte para a gente o que sua agência precisa produzir. Sem compromisso: vamos
+        entender sua operação e encontrar o melhor formato de parceria.
+      </p>
+    </div>
+
+    <div class="glass glass--blur edge-lit cta-card" data-reveal="right" style="--d:.2s">
+      <span class="cta-card__tag">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.24 8.24 0 0 1 0 16.48m4.52-6.17c-.25-.12-1.47-.72-1.69-.81s-.39-.12-.56.13-.64.8-.79.97-.29.19-.54.06a6.7 6.7 0 0 1-1.98-1.22 7.4 7.4 0 0 1-1.37-1.7c-.14-.25-.01-.38.11-.5s.25-.29.37-.44.17-.25.25-.42a.46.46 0 0 0-.02-.44c-.06-.13-.56-1.35-.77-1.84s-.4-.43-.56-.43l-.47-.01a.9.9 0 0 0-.66.31 2.77 2.77 0 0 0-.87 2.06 4.8 4.8 0 0 0 1.01 2.56c.12.16 1.75 2.67 4.23 3.74a14 14 0 0 0 1.41.52 3.4 3.4 0 0 0 1.56.1c.48-.07 1.47-.6 1.68-1.18s.21-1.08.14-1.18-.22-.16-.47-.28"/></svg>
+        Direto no WhatsApp
+      </span>
+
+      <h3>Manda o que sua agência precisa produzir</h3>
+
+      <ul class="cta-card__list">
+        <li>Quais frentes você quer terceirizar</li>
+        <li>O volume que sai por mês hoje</li>
+        <li>Os prazos com que sua equipe trabalha</li>
+      </ul>
+
+      <a class="btn btn--lg" href="{{ whatsapp }}?text=Oi%21%20Sou%20de%20uma%20ag%C3%AAncia%20e%20quero%20conhecer%20o%20Trace.%20Preciso%20de%20mais%20bra%C3%A7o%20de%20design." target="_blank" rel="noopener" data-cta="cta-whatsapp" data-keep-utm>
+        <span class="btn__label">Falar com o Trace</span>
+        <span class="btn__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+      <p class="cta-card__note">
+        Sem compromisso. A conversa começa entendendo sua operação, não vendendo pacote.
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ====================================================== FOOTER ======== -->
+<footer class="footer" data-sec>
+  <div class="fx fx-spot fx-spot--bl"></div>
+
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img class="logo" src="{{ url_for('static', filename='image/logo.webp') }}" alt="Studio Trace" width="520" height="319" loading="lazy" style="width:104px">
+        <p>Design sob demanda e white label para agências de marketing que precisam entregar mais.</p>
+        <div class="social">
+          <a href="{{ whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp" data-cta="footer-whatsapp" data-keep-utm><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.24 8.24 0 0 1 0 16.48m4.52-6.17c-.25-.12-1.47-.72-1.69-.81s-.39-.12-.56.13-.64.8-.79.97-.29.19-.54.06a6.7 6.7 0 0 1-1.98-1.22 7.4 7.4 0 0 1-1.37-1.7c-.14-.25-.01-.38.11-.5s.25-.29.37-.44.17-.25.25-.42a.46.46 0 0 0-.02-.44c-.06-.13-.56-1.35-.77-1.84s-.4-.43-.56-.43l-.47-.01a.9.9 0 0 0-.66.31 2.77 2.77 0 0 0-.87 2.06 4.8 4.8 0 0 0 1.01 2.56c.12.16 1.75 2.67 4.23 3.74a14 14 0 0 0 1.41.52 3.4 3.4 0 0 0 1.56.1c.48-.07 1.47-.6 1.68-1.18s.21-1.08.14-1.18-.22-.16-.47-.28"/></svg></a>
+          <a href="{{ instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="{{ behance }}" target="_blank" rel="noopener" aria-label="Behance"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.1 5.5c1.9 0 3.3.7 3.3 2.6 0 1.1-.6 1.8-1.5 2.2 1.3.4 2 1.4 2 2.8 0 2.3-1.9 3.4-4 3.4H2V5.5zm-.4 4.4c.9 0 1.5-.4 1.5-1.3s-.6-1.2-1.5-1.2H4.7v2.5zm.2 4.7c1 0 1.8-.4 1.8-1.5s-.7-1.5-1.8-1.5H4.7v3zM18.2 8c2.4 0 4 1.7 4 4.3v.7h-5.7c.1 1.2.9 1.9 2 1.9.8 0 1.4-.3 1.7-.9h1.9c-.4 1.6-1.8 2.6-3.6 2.6-2.5 0-4.1-1.7-4.1-4.3S15.8 8 18.2 8m-1.7 3.5h3.6c-.1-1.1-.8-1.8-1.8-1.8s-1.7.7-1.8 1.8M15.4 5.7h5.1v1.4h-5.1z"/></svg></a>
+        </div>
+      </div>
+
+      <nav class="footer__col" aria-label="Navegação do rodapé">
+        <h4>Navegue</h4>
+        <a href="#dor">A dor</a>
+        <a href="#solucao">Solução</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#como-funciona">Como funciona</a>
+      </nav>
+
+      <nav class="footer__col" aria-label="Mais do Trace">
+        <h4>O Trace</h4>
+        <a href="#white-label">White label</a>
+        <a href="#diferencial">Diferencial</a>
+        <a href="#portfolio">Portfólio</a>
+        <a href="#para-quem">Para quem é</a>
+      </nav>
+
+      <div class="footer__col footer__cta">
+        <h4>Vamos conversar</h4>
+        <a class="btn btn--ghost" href="#contato" data-cta="footer-cta">Falar com o Trace</a>
+        <span>Sem compromisso. Conte o que sua agência precisa produzir.</span>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>© <span id="ano">2026</span> Studio Trace. Todos os direitos reservados.</span>
+      <span>Design sob demanda · White label · Feito para agências</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp flutuante -->
+<a class="wa-float" href="{{ whatsapp }}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp" data-cta="float-whatsapp" data-keep-utm>
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.24 8.24 0 0 1 0 16.48m4.52-6.17c-.25-.12-1.47-.72-1.69-.81s-.39-.12-.56.13-.64.8-.79.97-.29.19-.54.06a6.7 6.7 0 0 1-1.98-1.22 7.4 7.4 0 0 1-1.37-1.7c-.14-.25-.01-.38.11-.5s.25-.29.37-.44.17-.25.25-.42a.46.46 0 0 0-.02-.44c-.06-.13-.56-1.35-.77-1.84s-.4-.43-.56-.43l-.47-.01a.9.9 0 0 0-.66.31 2.77 2.77 0 0 0-.87 2.06 4.8 4.8 0 0 0 1.01 2.56c.12.16 1.75 2.67 4.23 3.74a14 14 0 0 0 1.41.52 3.4 3.4 0 0 0 1.56.1c.48-.07 1.47-.6 1.68-1.18s.21-1.08.14-1.18-.22-.16-.47-.28"/></svg>
+</a>
+
+<script src="{{ url_for('static', filename='js/trace.js') }}" defer></script>
+<script>document.getElementById('ano').textContent = new Date().getFullYear();</script>
+
+<!-- Dados estruturados -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Studio Trace",
+  "description": "Design sob demanda e white label para agências de marketing.",
+  "areaServed": "BR",
+  "serviceType": [
+    "Social Media",
+    "Identidade Visual",
+    "Campanhas",
+    "Performance",
+    "Materiais Comerciais"
+  ]
+}
+</script>
+
+</body>
+</html>

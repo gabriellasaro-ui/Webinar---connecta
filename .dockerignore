@@ -1,0 +1,36 @@
+# Originais pesados: a pagina serve os .webp gerados
+static/image/BG.jpeg
+static/image/BANNER PC.jpeg
+static/image/BANNER MOBILE.jpeg
+static/image/PRIMEIRA*.jpeg
+# originais do portfolio: a pagina serve os webp de static/image/portfolio/
+static/image/*.jpg.jpeg
+static/image/*.psd
+static/video/*.mov
+static/video/*.MOV
+
+# Leads gravados localmente
+data/
+
+# Logs e temporarios
+*.log
+__pycache__/
+*.pyc
+.venv/
+venv/
+.git/
+.gitignore
+.DS_Store
+
+# Documentacao e fontes de trabalho
+COPY.txt
+skill_lp.md
+deploy-git-easypanel.md
+
+# Templates de teste
+templates/__test.html
+
+# Fontes de trabalho desta LP: a pagina serve os .webp de static/image/
+statics/
+REFERÊNCIA/
+BG.jpg.jpeg

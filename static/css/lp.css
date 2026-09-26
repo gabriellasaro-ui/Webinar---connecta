@@ -1,0 +1,753 @@
+/* ==========================================================================
+   IMOBILIARIA PREVISIVEL · Design System
+   Base visual: preto + luz azul, glassmorphism e tipografia Drupadi.
+   Mesmo sistema visual da LP de referencia, com o azul da marca Connecta
+   (#144C99) no tom escuro dos gradientes.
+
+   Regra de performance deste arquivo:
+   nada de filter: blur() em camada grande, nada de mix-blend-mode em secao
+   inteira, nada de will-change espalhado e nada de animacao infinita que
+   mexa em layout. Suavidade vem de gradiente, nao de filtro.
+   ========================================================================== */
+
+/* --------------------------------------------------------- 01. FONTES ---- */
+@font-face {
+  font-family: 'Drupadi';
+  src: url('../fonts/Drupadi-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------- 02. TOKENS ---- */
+:root {
+  /* cor */
+  --ink:        #000000;
+  --ink-2:      #04060d;
+  --ink-3:      #070b16;
+  --blue:       #0B62FF;
+  --blue-hi:    #2C7CFF;
+  --blue-lo:    #144C99; /* azul da marca */
+  --blue-soft:  #4D9BFF;
+  --cyan:       #57E6C4;
+  --violet:     #6B5CFF;
+  --white:      #ffffff;
+  --text:       rgba(255,255,255,.92);
+  --muted:      rgba(255,255,255,.60);
+  --faint:      rgba(255,255,255,.38);
+
+  /* vidro */
+  --stroke:     rgba(255,255,255,.14);
+  --stroke-hi:  rgba(255,255,255,.28);
+  --blur:       20px;
+
+  /* forma */
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 34px;
+  --r-pill: 999px;
+
+  /* ritmo */
+  --pad-x: clamp(20px, 5vw, 72px);
+  --sec-y: clamp(72px, 9vw, 132px);
+  --maxw: 1320px;
+
+  /* movimento */
+  --ease: cubic-bezier(.22,.9,.28,1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
+  --t-fast: .28s;
+  --t-mid: .55s;
+
+  /* sombra */
+  --shadow-glass: 0 24px 60px -22px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.13);
+  --shadow-blue: 0 18px 50px -14px rgba(11,98,255,.55);
+}
+
+/* ---------------------------------------------------------- 03. RESET ---- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 110px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: clamp(15px, 1.05vw, 16.5px);
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; color: inherit; }
+ul, ol { list-style: none; }
+
+::selection { background: var(--blue); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--blue-soft);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* --------------------------------------------------- 04. TIPOGRAFIA ------ */
+.display, h1, h2, h3, .h-drupadi {
+  font-family: 'Drupadi', 'Poppins', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: .012em;
+  color: var(--white);
+}
+
+h1 { font-size: clamp(1.62rem, 3.3vw, 3.4rem); line-height: 1.08; }
+h2 { font-size: clamp(1.6rem, 3.05vw, 2.9rem); line-height: 1.06; }
+h3 { font-size: clamp(1.05rem, 1.45vw, 1.38rem); line-height: 1.12; }
+
+.lead {
+  font-size: clamp(1rem, 1.2vw, 1.16rem);
+  color: var(--muted);
+  max-width: 62ch;
+  line-height: 1.72;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: .71rem;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--blue-soft);
+  font-weight: 500;
+}
+.eyebrow::before {
+  content: '';
+  width: 28px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue-soft));
+}
+
+.txt-blue  { color: var(--blue-soft); }
+.txt-white { color: var(--white); }
+.txt-mute  { color: var(--muted); }
+
+.grad-blue {
+  background: linear-gradient(100deg, #ffffff 6%, var(--blue-soft) 50%, var(--blue) 94%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ------------------------------------------------------- 05. LAYOUT ------ */
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--sec-y);
+  isolation: isolate;
+  overflow: hidden;
+  overflow: clip;
+}
+
+/* Emenda entre secoes.
+   Cada secao escurece nas duas pontas, entao o fundo de uma dissolve no
+   fundo da outra em vez de terminar num risco horizontal. Fica acima das
+   camadas .fx (-2) e abaixo do conteudo. */
+.section::before,
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    #000 0%,
+    #000 6%,
+    rgba(0,0,0,.88) 12%,
+    rgba(0,0,0,.52) 19%,
+    rgba(0,0,0,.20) 25%,
+    transparent 33%,
+    transparent 67%,
+    rgba(0,0,0,.20) 75%,
+    rgba(0,0,0,.52) 81%,
+    rgba(0,0,0,.88) 88%,
+    #000 94%,
+    #000 100%);
+}
+
+.sec-head { max-width: 880px; margin-bottom: clamp(30px, 3.6vw, 54px); }
+.sec-head .eyebrow { margin-bottom: 18px; }
+h2 + .lead, .diff-quote + .lead { margin-top: clamp(18px, 1.6vw, 26px); }
+
+.rule {
+  height: 1px; border: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14) 18%, rgba(11,98,255,.6) 50%, rgba(255,255,255,.14) 82%, transparent);
+}
+
+/* ======================================================================
+   06. ATMOSFERA
+   Cada secao monta o proprio fundo combinando estas camadas, para que
+   duas secoes seguidas nunca tenham a mesma cara. Tudo em gradiente:
+   sem blur de filtro e sem blend mode, entao rola liso ate em maquina
+   modesta.
+   ====================================================================== */
+
+.fx { position: absolute; inset: 0; pointer-events: none; z-index: -2; }
+
+/* ---- 06.1 Foto da identidade -----------------------------------------
+   O fundo listrado e a imagem de verdade (bg.webp), nunca uma imitacao em
+   gradiente. Aparece so em algumas secoes, alternando recorte e tom.      */
+/* ---- 06.2 Aurora: campo de cor difuso, sem listra nenhuma ------------- */
+.fx-aurora::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(38% 44% at 12% 32%, rgba(107,92,255,.34), transparent 70%),
+    radial-gradient(46% 48% at 84% 42%, rgba(11,98,255,.42), transparent 72%),
+    radial-gradient(40% 40% at 52% 76%, rgba(87,230,196,.16), transparent 70%);
+}
+
+/* ---- 06.3 Halo pontual ------------------------------------------------ */
+.fx-spot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(46% 54% at var(--sx, 50%) var(--sy, 42%), rgba(11,98,255,.48), transparent 70%);
+}
+.fx-spot--tr { --sx: 84%; --sy: 34%; }
+.fx-spot--bl { --sx: 14%; --sy: 66%; }
+.fx-spot--c  { --sx: 50%; --sy: 46%; }
+
+/* ---- 06.4 Feixe vertical: luz descendo em coluna ---------------------- */
+.fx-shaft::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 46%, rgba(11,98,255,.24) 68%, rgba(87,230,196,.06) 76%, transparent 94%),
+    radial-gradient(34% 46% at 72% 50%, rgba(11,98,255,.38), transparent 72%);
+}
+/* mesma coluna de luz, centrada, para secao de conteudo centralizado */
+.fx-shaft--center::before {
+  background:
+    linear-gradient(90deg, transparent 22%, rgba(11,98,255,.20) 50%, transparent 78%),
+    radial-gradient(40% 46% at 50% 50%, rgba(11,98,255,.34), transparent 72%);
+}
+
+/* ---- 06.5 Malha tecnica ----------------------------------------------- */
+.fx-mesh::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: .5;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 76px 76px;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 42%, #000 18%, transparent 78%);
+  mask-image: radial-gradient(70% 60% at 50% 42%, #000 18%, transparent 78%);
+}
+
+.fx-photo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../image/bg.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: .9;
+  /* A propria textura da foto dissolve no topo e na base. Sem isso ela
+     terminava com a listra cortada, e escurecer por cima nao resolvia:
+     o corte continuava visivel na borda das barras de luz. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+}
+.fx-photo--right::before  { background-position: 76% center; }
+.fx-photo--left::before   { background-position: 18% center; }
+.fx-photo--bottom::before { background-position: center 82%; }
+.fx-photo--top::before    { background-position: center 16%; }
+/* variacoes de tom para a mesma foto nao parecer a mesma secao */
+.fx-photo--cool::before   { filter: hue-rotate(-18deg) saturate(1.3); }
+.fx-photo--violet::before { filter: hue-rotate(40deg) saturate(1.15); }
+
+/* ---- 06.6 Vinhetas ---------------------------------------------------- */
+/* O veu escurece so o lado do texto; o lado da luz fica quase limpo para a
+   foto aparecer com forca. --mirror inverte quando o texto esta a direita. */
+.fx-veil {
+  background:
+    linear-gradient(180deg, #000 0%, rgba(0,0,0,.10) 22%, rgba(0,0,0,.18) 70%, #000 100%),
+    linear-gradient(90deg, rgba(0,0,0,.80) 0%, rgba(0,0,0,.30) 44%, rgba(0,0,0,.06) 72%, rgba(0,0,0,.30) 100%);
+}
+.fx-veil--mirror {
+  background:
+    linear-gradient(180deg, #000 0%, rgba(0,0,0,.10) 22%, rgba(0,0,0,.18) 70%, #000 100%),
+    linear-gradient(270deg, rgba(0,0,0,.80) 0%, rgba(0,0,0,.30) 44%, rgba(0,0,0,.06) 72%, rgba(0,0,0,.30) 100%);
+}
+.fx-veil--soft   { background: linear-gradient(180deg, #000 0%, rgba(0,0,0,.14) 26%, rgba(0,0,0,.30) 72%, #000 100%); }
+.fx-veil--center { background: radial-gradient(80% 70% at 50% 50%, transparent 10%, rgba(0,0,0,.70) 66%, #000 100%); }
+.fx-veil--right  { background: linear-gradient(90deg, #000 4%, rgba(0,0,0,.82) 32%, rgba(0,0,0,.26) 64%, rgba(0,0,0,.72) 100%); }
+
+/* ---- 06.7 Grao: uma unica camada fixa para a pagina toda -------------- */
+/* Antes era uma por secao, com mix-blend-mode. Custava caro a toa.       */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: .05;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------- 07. VIDRO ----- */
+/* backdrop-filter so onde ele realmente aparece: sobre foto ou banner.
+   Em fundo quase preto o efeito nao se ve e so cobra FPS.                */
+.glass {
+  position: relative;
+  background: linear-gradient(158deg, rgba(255,255,255,.10), rgba(255,255,255,.028) 46%, rgba(255,255,255,.05));
+  border: 1px solid var(--stroke);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-glass);
+  overflow: hidden;
+}
+/* use junto de .glass quando atras houver foto ou banner */
+.glass--blur {
+  backdrop-filter: blur(var(--blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(150%);
+}
+
+/* filete de luz na borda, o detalhe que vende o vidro */
+.edge-lit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(150deg, rgba(255,255,255,.60), rgba(255,255,255,0) 36%, rgba(255,255,255,0) 64%, rgba(11,98,255,.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: .85;
+}
+
+.glass--soft {
+  background: linear-gradient(158deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+  border-color: rgba(255,255,255,.09);
+}
+
+.glass--blue {
+  background: linear-gradient(158deg, rgba(11,98,255,.30), rgba(11,98,255,.07) 62%, rgba(255,255,255,.04));
+  border-color: rgba(77,155,255,.36);
+}
+
+/* chip de vidro, igual ao direcionamento visual.
+   Esse vive sempre sobre o banner, entao mantem o blur de verdade. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 20px;
+  border-radius: var(--r-pill);
+  font-size: .87rem;
+  color: var(--white);
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.30);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.22);
+  white-space: nowrap;
+}
+.chip--dot::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  box-shadow: 0 0 10px 2px rgba(77,155,255,.9);
+}
+
+/* --------------------------------------------------------- 08. BOTOES ---- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 9px 9px 30px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: linear-gradient(120deg, var(--blue-hi), var(--blue) 58%, var(--blue-lo));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: var(--shadow-blue), inset 0 1px 0 rgba(255,255,255,.30);
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.btn__ico {
+  display: grid;
+  place-items: center;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--blue);
+  flex: none;
+  transition: transform var(--t-fast) var(--ease);
+}
+.btn__ico svg { width: 17px; height: 17px; }
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 32%, rgba(255,255,255,.40) 50%, transparent 68%);
+  transform: translateX(-120%);
+  transition: transform .8s var(--ease-out);
+}
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 26px 60px -14px rgba(11,98,255,.75), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.btn:hover::after { transform: translateX(120%); }
+.btn:hover .btn__ico { transform: translateX(4px); }
+.btn:active { transform: translateY(-1px); }
+
+.btn--ghost {
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--stroke-hi);
+  box-shadow: none;
+  padding: 15px 28px;
+}
+.btn--ghost:hover { background: rgba(255,255,255,.11); box-shadow: 0 18px 44px -18px rgba(0,0,0,.9); }
+
+/* secundario: pilula de vidro com o circulo azul aceso, para ancora
+   interna que nao pode competir com o CTA principal */
+.btn--glass {
+  background: linear-gradient(150deg, rgba(255,255,255,.13), rgba(255,255,255,.035) 60%, rgba(77,155,255,.10));
+  border: 1px solid rgba(255,255,255,.22);
+  padding: 7px 7px 7px 26px;
+  font-size: .95rem;
+  box-shadow: 0 18px 44px -18px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.22);
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.btn--glass .btn__ico {
+  width: 40px; height: 40px;
+  color: #fff;
+  background: linear-gradient(140deg, var(--blue-hi), var(--blue) 60%, var(--blue-lo));
+  box-shadow: 0 0 22px -2px rgba(11,98,255,.8), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.btn--glass:hover {
+  border-color: rgba(120,175,255,.55);
+  background: linear-gradient(150deg, rgba(77,155,255,.24), rgba(11,98,255,.08) 60%, rgba(77,155,255,.16));
+  box-shadow: 0 22px 50px -16px rgba(11,98,255,.55), inset 0 1px 0 rgba(255,255,255,.28);
+}
+.btn--glass:hover .btn__ico { transform: translateY(3px); }
+
+.btn--lg { font-size: 1.05rem; padding-left: 34px; }
+.btn--lg .btn__ico { width: 48px; height: 48px; }
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--blue-soft);
+  font-weight: 500;
+  transition: gap var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.link-arrow:hover { gap: 17px; color: #fff; }
+
+/* -------------------------------------------------- 09. CARD GENERICO --- */
+/* Cards mais compactos: a grade cabe mais coluna e o olho percorre a
+   secao inteira sem precisar rolar peca por peca. */
+.card {
+  position: relative;
+  padding: clamp(17px, 1.75vw, 24px);
+  border-radius: var(--r-md);
+  background: linear-gradient(158deg, rgba(255,255,255,.085), rgba(255,255,255,.022) 55%, rgba(255,255,255,.05));
+  border: 1px solid var(--stroke);
+  box-shadow: var(--shadow-glass);
+  overflow: hidden;
+  transition: transform .5s var(--ease), border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+
+/* holofote que segue o cursor */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 0%), rgba(77,155,255,.22), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--t-mid) var(--ease);
+  pointer-events: none;
+}
+.card:hover::before { opacity: 1; }
+.card:hover {
+  border-color: rgba(77,155,255,.42);
+  box-shadow: 0 34px 74px -26px rgba(0,0,0,.95), 0 0 0 1px rgba(77,155,255,.12), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.card > * { position: relative; z-index: 1; }
+
+.card__num {
+  font-family: 'Drupadi', sans-serif;
+  font-size: clamp(1.75rem, 2.3vw, 2.35rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,.34);
+  transition: color var(--t-mid) var(--ease), -webkit-text-stroke-color var(--t-mid) var(--ease);
+}
+.card:hover .card__num {
+  color: rgba(77,155,255,.18);
+  -webkit-text-stroke-color: rgba(77,155,255,.8);
+}
+
+.card__ico {
+  display: grid;
+  place-items: center;
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(150deg, rgba(11,98,255,.42), rgba(11,98,255,.10));
+  border: 1px solid rgba(77,155,255,.32);
+  color: #cfe2ff;
+  margin-bottom: 15px;
+  transition: transform var(--t-mid) var(--ease), background var(--t-mid) var(--ease);
+}
+.card__ico svg { width: 19px; height: 19px; }
+.card:hover .card__ico {
+  transform: translateY(-4px) rotate(-4deg);
+  background: linear-gradient(150deg, rgba(11,98,255,.78), rgba(11,98,255,.22));
+}
+
+.card h3 { margin-bottom: 7px; font-size: clamp(.98rem, 1.2vw, 1.16rem); }
+.card p  { color: var(--muted); font-size: .89rem; line-height: 1.6; }
+
+.grid { display: grid; gap: clamp(12px, 1.2vw, 18px); }
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+
+/* ======================================================================
+   10. ANIMACAO DE SCROLL
+   Tres camadas. A secao inteira entra como bloco, os elementos dentro dela
+   entram em cascata e, onde o navegador tem scroll-driven animation, as
+   camadas de fundo acompanham a rolagem quadro a quadro.
+   Sem blur e sem will-change espalhado: era isso que travava a pagina.
+   ====================================================================== */
+
+/* ---- 10.1 Entrada da secao inteira -----------------------------------
+   Cada bloco sobe e materializa antes do conteudo dele comecar a cascata.
+   Isso da o "corte" entre uma secao e a proxima que faltava.            */
+[data-sec] {
+  opacity: 0;
+  transform: translate3d(0, 46px, 0);
+  transition:
+    opacity .9s var(--ease-out),
+    transform 1.15s var(--ease-out);
+}
+[data-sec].is-in { opacity: 1; transform: none; }
+
+/* ---- 10.2 Entrada elemento a elemento --------------------------------
+   Curso maior e tempo maior que antes: a entrada precisa ser vista, nao
+   adivinhada. O atraso vem de --d, que o JS distribui pela grade.       */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 72px, 0) scale(.985);
+  transition:
+    opacity 1s var(--ease-out) var(--d, 0s),
+    transform 1.15s var(--ease-out) var(--d, 0s);
+}
+[data-reveal='left']  { transform: translate3d(-84px, 0, 0); }
+[data-reveal='right'] { transform: translate3d(84px, 0, 0); }
+[data-reveal='zoom']  { transform: scale(.88) translate3d(0, 40px, 0); }
+[data-reveal='rise']  { transform: translate3d(0, 110px, 0); }
+
+/* tomba para tras e endireita: usado nas grades de card */
+[data-reveal='tilt'] {
+  transform: perspective(1100px) rotateX(11deg) translate3d(0, 58px, 0);
+  transform-origin: 50% 100%;
+}
+
+/* Cortina: o bloco e varrido de cima para baixo por uma mascara.
+   De proposito nao usa clip-path. O Chromium desconta o clip-path do
+   proprio elemento ao calcular a area de intersecao, entao um alvo
+   clipado nunca cruza o limiar do IntersectionObserver e ficaria
+   invisivel para sempre. Mascara e efeito de pintura: nao mexe nisso. */
+[data-reveal='mask'] {
+  transform: translate3d(0, 24px, 0);
+  -webkit-mask-image: linear-gradient(180deg, #000 46%, rgba(0,0,0,0) 54%);
+          mask-image: linear-gradient(180deg, #000 46%, rgba(0,0,0,0) 54%);
+  -webkit-mask-size: 100% 240%;
+          mask-size: 100% 240%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: 0 100%;
+          mask-position: 0 100%;
+  transition:
+    opacity 1s var(--ease-out) var(--d, 0s),
+    transform 1.15s var(--ease-out) var(--d, 0s),
+    -webkit-mask-position 1.2s var(--ease-out) var(--d, 0s),
+    mask-position 1.2s var(--ease-out) var(--d, 0s);
+}
+/* A mascara so serve para a entrada. Terminada a varredura o JS a remove,
+   senao ela cortaria sombra e hover dos filhos para sempre. */
+[data-reveal='mask'].is-in {
+  -webkit-mask-position: 0 0;
+          mask-position: 0 0;
+}
+
+[data-reveal].is-in { opacity: 1; transform: none; }
+
+/* o filete do eyebrow risca junto com o texto */
+.eyebrow::before {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform .9s var(--ease-out) calc(var(--d, 0s) + .12s);
+}
+.eyebrow[data-reveal].is-in::before { transform: scaleX(1); }
+/* eyebrow sem reveal nao pode ficar com o filete zerado para sempre */
+.eyebrow:not([data-reveal])::before { transform: scaleX(1); }
+
+/* revelacao por linha de texto */
+.reveal-lines span {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: .06em;
+}
+@media (min-width: 861px) {
+  .reveal-lines span { white-space: nowrap; }
+}
+.reveal-lines span > i {
+  display: inline-block;
+  font-style: normal;
+  transform: translateY(115%);
+  transition: transform 1s var(--ease-out) var(--d, 0s);
+}
+.reveal-lines.is-in span > i { transform: translateY(0); }
+
+/* ---- 10.3 Movimento preso a rolagem ----------------------------------
+   Onde o navegador tem a API, o quadro segue o dedo: o fundo deriva, o
+   cabecalho da secao sobe e a secao inteira perde forca ao sair.       */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-lift {
+      animation: scrollLift linear both;
+      animation-timeline: view();
+      animation-range: entry 6% cover 46%;
+    }
+    .scroll-drift {
+      animation: scrollDrift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .scroll-fade {
+      animation: scrollFade linear both;
+      animation-timeline: view();
+      animation-range: exit 10% exit 90%;
+    }
+
+    /* paralaxe do cabecalho: anda mais devagar que a grade abaixo dele.
+       Nunca no mesmo elemento que carrega [data-sec] ou [data-reveal]:
+       animacao com fill both venceria a transicao de entrada e a
+       revelacao nunca apareceria. */
+    .scroll-par {
+      animation: scrollPar linear both;
+      animation-timeline: view();
+      animation-range: entry 30% exit 100%;
+    }
+  }
+}
+
+@keyframes scrollLift {
+  from { transform: translate3d(0, 60px, 0); opacity: .3; }
+  to   { transform: translate3d(0, 0, 0);    opacity: 1; }
+}
+@keyframes scrollDrift {
+  from { transform: translate3d(0, -6%, 0) scale(1.12); }
+  to   { transform: translate3d(0, 6%, 0)  scale(1.12); }
+}
+@keyframes scrollFade {
+  from { opacity: 1; }
+  to   { opacity: .25; }
+}
+@keyframes scrollPar {
+  from { transform: translate3d(0, 34px, 0); }
+  to   { transform: translate3d(0, -34px, 0); }
+}
+
+/* barra de progresso do scroll */
+.progress {
+  position: fixed;
+  inset: 0 auto auto 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--blue), var(--blue-soft) 55%, var(--cyan));
+  box-shadow: 0 0 18px rgba(11,98,255,.85);
+  z-index: 999;
+}
+
+/* ------------------------------------------------------ 11. RESPONSIVO -- */
+@media (max-width: 980px) {
+  .grid--3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .grid--2, .grid--3 { grid-template-columns: 1fr; }
+  :root { --blur: 14px; }
+}
+/* no celular o respiro entre secoes cai quase pela metade */
+@media (max-width: 860px) {
+  :root { --sec-y: 50px; }
+  .fx-photo::before { opacity: .34; }
+  .sec-head { margin-bottom: 26px; }
+}
+
+/* ---------------------------------------------------- 11.1 CELULAR ----- */
+/* Aparelho sem cursor tem GPU e memoria mais curtas. Aqui o visual e o
+   mesmo, mas o que custa caro e nao muda quase nada sai de cena.        */
+@media (hover: none) {
+  .glass--blur {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(158deg, rgba(22,26,38,.88), rgba(6,8,16,.92));
+  }
+
+  /* cada .scroll-drift virava uma camada composta do tamanho da secao */
+  .scroll-drift,
+  .scroll-par { animation: none !important; }
+
+  /* o grao e textura fina demais para se notar em tela de celular */
+  .grain { display: none; }
+}
+
+/* ------------------------------------------- 12. MOVIMENTO REDUZIDO ----- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+  [data-reveal='mask'] { -webkit-mask-image: none; mask-image: none; }
+  [data-sec] { opacity: 1; transform: none; }
+  .eyebrow::before { transform: none; }
+  .reveal-lines span > i { transform: none; }
+}

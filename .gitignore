@@ -1,0 +1,33 @@
+# Masters de video: 295MB, estouram o limite de 100MB do GitHub.
+# Os MP4 web (vsl.mp4 / vsl-720.mp4) sao versionados e vao para o deploy.
+static/video/*.mov
+static/video/*.MOV
+static/video/*.avi
+static/video/*.mkv
+
+# PNGs originais dos banners (4,2MB): a pagina usa os .webp equivalentes,
+# 96% menores. Ficam so na maquina local como fonte.
+static/img/banner pc.png
+static/img/banner mobile.png
+
+# So os *-web.mp4 (720p enxuto) vao para o repo. Os 1080p e os 720p
+# antigos somavam 232MB e faziam o archive do GitHub estourar no deploy.
+static/video/*.mp4
+!static/video/*-web.mp4
+
+# Artefatos de teste
+templates/__test.html
+static/video/__test-*
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Sistema
+.DS_Store
+Thumbs.db

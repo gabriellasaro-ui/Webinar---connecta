@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    container_name: lp-trace
+    container_name: webinar
     ports:
       - "5000:5000"
     environment:

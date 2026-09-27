@@ -104,4 +104,4 @@ def nao_encontrado(_err):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5011, debug=IS_DEV)
+    app.run(host="0.0.0.0", port=5000, debug=IS_DEV)

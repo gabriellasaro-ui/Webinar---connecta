@@ -1,7 +1,7 @@
 /* ==========================================================================
    LP · Tracking base (padrao obrigatorio do sistema de LPs)
    Eventos: page_view automatico, click_cta, scroll_depth, lead_submit.
-   Faz ponte com dataLayer / gtag / fbq quando existirem, sem quebrar sem eles.
+   Tudo vai para o dataLayer; as tags (Meta, GA4) ficam no GTM.
    ========================================================================== */
 (function (w, d) {
   'use strict';
@@ -40,12 +40,9 @@
     w.dataLayer = w.dataLayer || [];
     w.dataLayer.push(payload);
 
-    if (typeof w.gtag === 'function') w.gtag('event', name, payload);
-    if (typeof w.fbq === 'function') {
-      var std = { click_cta: 'Contact', lead_submit: 'Lead' };
-      if (std[name]) w.fbq('track', std[name], payload);
-      else w.fbq('trackCustom', name, payload);
-    }
+    /* Meta e Google recebem os eventos so pelo GTM, que le este dataLayer.
+       Antes o evento tambem ia direto para fbq/gtag, e com a tag do GTM
+       cada clique contava duas vezes (2 Contact por clique no Meta). */
 
     if (w.LP_DEBUG) console.log('[track]', name, payload);
     return payload;
